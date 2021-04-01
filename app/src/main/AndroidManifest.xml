@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.wakelightcompanion">
+    package="com.richardswesterhof.wakelightcompanion">
+
+    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="30" />
 
     <!-- permissions -->
 
@@ -15,7 +17,7 @@
         android:theme="@style/Theme.WakeLightCompanion">
 
         <!-- the activities in the app -->
-        <activity android:name=".MainActivity">
+        <activity android:name="com.richardswesterhof.wakelightcompanion.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +26,28 @@
         </activity>
 
         <!-- the action receivers -->
-        <receiver android:name=".AlarmChangedReceiver"  android:exported="true">
+        <!-- intent to notify of alarm change -->
+        <receiver android:name="com.richardswesterhof.wakelightcompanion.AlarmChangedReceiver">
             <intent-filter>
-                <!-- get notified when the next alarm changes -->
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED"/>
+            </intent-filter>
+        </receiver>
+        <!-- intent to set a wakelight alarm-->
+        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightEnableRequestReceiver">
+            <intent-filter>
+                <action android:name="com.richardswesterhof.wakelightcompanion.SET_WAKELIGHT_ALARM"/>
+            </intent-filter>
+        </receiver>
+        <!-- intent to start the wakelight alarm -->
+        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightStarter">
+            <intent-filter>
+                <action android:name="com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM"/>
+            </intent-filter>
+        </receiver>
+        <!-- intent to stop the wakelight alarm -->
+        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightStopper">
+            <intent-filter>
+                <action android:name="com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"/>
             </intent-filter>
         </receiver>
     </application>

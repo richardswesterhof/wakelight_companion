@@ -1,4 +1,4 @@
-package com.example.wakelightcompanion
+package com.richardswesterhof.wakelightcompanion
 
 import android.app.AlarmManager
 import android.content.Context
@@ -14,6 +14,10 @@ class AlarmUtil(context: Context) {
 
     fun getNextAlarmDate(): Date? {
         return getNextAlarm()?.triggerTime?.let { Date(it) }
+    }
+
+    fun getAlarmManager(): AlarmManager {
+        return am
     }
 
 }

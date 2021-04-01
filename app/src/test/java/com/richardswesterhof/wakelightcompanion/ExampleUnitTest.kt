@@ -1,4 +1,4 @@
-package com.example.wakelightcompanion
+package com.richardswesterhof.wakelightcompanion
 
 import org.junit.Test
 
