@@ -1,3 +1,37 @@
+<!-- hackeroonies that allow us to reuse certain strings in XML -->
+<!DOCTYPE resources [
+    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion">
+    ]
+>
+
 <resources>
+    <!-- general app metadata -->
     <string name="app_name">WakeLightCompanion</string>
+
+    <!--
+        wrappers around the entity resources defined at the top of this file,
+        so we can use them in the code as well
+    -->
+    <string name="package_prefix">&package_prefix;</string>
+
+    <!-- notifications -->
+        <!-- categories -->
+            <!-- wakelight enable -->
+    <string name="notif_cat_enable_name">Wakelight Enable Option</string>
+    <string name="notif_cat_enable_desc">Notifications that ask you if want to enable your WakeLight for your next upcoming alarm.</string>
+    <string name="notif_cat_enable_id" translatable="false">&package_prefix;.wakelight_enable</string>
+
+            <!-- wakelight stop -->
+    <string name="notif_cat_stop_name">Wakelight Stop Button</string>
+    <string name="notif_cat_stop_desc">Notifications that let you stop the WakeLight when it is going off.</string>
+    <string name="notif_cat_stop_id" translatable="false">&package_prefix;.wakelight_stop</string>
+
+        <!-- individual notifications -->
+            <!-- ask enable -->
+    <string name="notif_ask_enable_wakelight_title">New alarm detected for %1$s</string>
+    <string name="notif_ask_enable_wakelight_content">Would you like to enable your WakeLight for this alarm?</string>
+    <string name="notif_ask_enable_wakelight_confirm_button">Enable</string>
+            <!-- button stop -->
+    <string name="notif_ask_stop_wakelight_title">WakeLight active</string>
+    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm</string>
 </resources>

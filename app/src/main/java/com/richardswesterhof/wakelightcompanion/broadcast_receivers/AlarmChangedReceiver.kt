@@ -52,17 +52,17 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.lightbulb)
-                .setContentTitle("New alarm detected for $formattedDate")
-                .setContentText("Would you like to enable your WakeLight for this alarm?")
+                .setContentTitle(context.getString(R.string.notif_ask_enable_wakelight_title, formattedDate))
+                .setContentText(context.getString(R.string.notif_ask_enable_wakelight_content))
                 .setContentIntent(mainPendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Enable", enablePendingIntent)
+                .addAction(0, context.getString(R.string.notif_ask_enable_wakelight_confirm_button), enablePendingIntent)
                 .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
             // Google: notificationId is a unique int for each notification that you must define
             // Me: haha hardcoded 1 go brrrrrr
             notify(nextNotificationId, builder.build())
-            Log.d(this::class.simpleName,"sent the notification")
+            Log.d(this::class.simpleName,"Sent the notification")
         }
     }
 }

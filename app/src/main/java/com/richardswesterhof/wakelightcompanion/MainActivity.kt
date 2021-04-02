@@ -11,19 +11,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val enableNotifCat = "Wakelight Enable Option"
-        val enableNotifDesc = "Notifications that ask you if want to enable your WakeLight for your next upcoming alarm."
+        val enableNotifCat = getString(R.string.notif_cat_enable_name)
+        val enableNotifDesc = getString(R.string.notif_cat_enable_desc)
 
-        val stopNotifCat = "Wakelight Stop Button"
-        val stopNotifDesc = "Notifications that let you stop the WakeLight when it is going off."
+        val stopNotifCat = getString(R.string.notif_cat_stop_name)
+        val stopNotifDesc = getString(R.string.notif_cat_stop_desc)
 
-        createNotificationChannel(enableNotifCat, enableNotifDesc, NotificationManager.IMPORTANCE_HIGH)
-        createNotificationChannel(stopNotifCat, stopNotifDesc, NotificationManager.IMPORTANCE_LOW)
+        createNotificationChannel(enableNotifCat, enableNotifDesc, NotificationManager.IMPORTANCE_HIGH, getString(R.string.notif_cat_enable_id))
+        createNotificationChannel(stopNotifCat, stopNotifDesc, NotificationManager.IMPORTANCE_LOW, getString(R.string.notif_cat_stop_id))
     }
 
 
-    private fun createNotificationChannel(name: String, descriptionText: String, importance: Int) {
-        val channel = NotificationChannel(this.resources.getString(R.string.app_name) + name, name, importance).apply {
+    private fun createNotificationChannel(name: String, descriptionText: String, importance: Int, id: String) {
+        val channel = NotificationChannel(id, name, importance).apply {
             description = descriptionText
         }
         // Register the channel with the system

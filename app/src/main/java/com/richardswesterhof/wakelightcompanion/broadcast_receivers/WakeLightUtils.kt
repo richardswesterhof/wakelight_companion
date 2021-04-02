@@ -15,15 +15,18 @@ private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.w
 
 class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 
-    private val notificationChannel: String = "Wakelight Stop Button"
+    private lateinit var notificationChannel: String
 
     override fun trigger(context: Context, intent: Intent) {
+        // init the notif channel id
+        notificationChannel = context.resources.getString(R.string.notif_cat_stop_id)
+
         // check if alarm still exists
         val au = AlarmUtil(context)
         val am = au.am
         if(am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
-            // only if it does start wakelight
-            Log.d("WakeLightStarter", "Received request to start wakelight")
+            // only if it does, start wakelight
+            Log.d(this::class.simpleName, "Received request to start wakelight")
             sendDisableNotif(context)
             startWakelight()
         }
@@ -32,7 +35,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
     fun startWakelight() {
         // TODO: get stored ip
         val ip = "NONE"
-        Log.d("WakeLightStarter", "calling start wakelight on the implementation")
+        Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
         startWakeLight(ip)
     }
 
@@ -48,8 +51,8 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.lightbulb)
-                .setContentTitle("WakeLight active")
-                .setContentText("Tap to dismiss WakeLight alarm")
+                .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
+                .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
                 .setContentIntent(stopPendingIntent)
                 .setAutoCancel(true)
 
@@ -57,7 +60,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
             // Google: notificationId is a unique int for each notification that you must define
             // Me: haha hardcoded 2 go brrrrrr
             notify(nextNotificationId, builder.build())
-            Log.d("WakeLightStarter","sent the notification")
+            Log.d(this::class.simpleName,"Sent the notification")
         }
     }
 }
@@ -65,14 +68,14 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
-        Log.d("WakeLightStopper", "Received request to stop wakelight")
+        Log.d(this::class.simpleName, "Received request to stop wakelight")
         stopWakelight()
     }
 
     fun stopWakelight() {
         // TODO: get stored ip
         val ip = "NONE"
-        Log.d("WakeLightStarter", "calling stop wakelight on the implementation")
+        Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
         stopWakeLight(ip)
     }
 }
