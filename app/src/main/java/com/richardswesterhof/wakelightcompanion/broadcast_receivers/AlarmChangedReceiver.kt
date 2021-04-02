@@ -1,39 +1,39 @@
-package com.richardswesterhof.wakelightcompanion
+package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.richardswesterhof.wakelightcompanion.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-// this class will get its onReceive method called when the next alarm changes on the device
-class AlarmChangedReceiver : BroadcastReceiver() {
+private val listeningFors: List<String> = listOf("android.app.action.NEXT_ALARM_CLOCK_CHANGED")
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val receivedAction: String? = intent.action;
-        if(receivedAction != "android.app.action.NEXT_ALARM_CLOCK_CHANGED") return
+class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
 
+    override fun trigger(context: Context, intent: Intent) {
         val date: Date? = AlarmUtil(context).getNextAlarmDate()
-        Log.i("my pp", "next alarm date is set to be $date")
+        Log.d(this::class.simpleName, "next alarm date is set to be $date")
 
         if(date == null) return
 
+        // TODO: if wakelight currently active, stop it
 
+        sendNotification(context, date)
+    }
+
+
+    fun sendNotification(context: Context, date: Date) {
         val format = SimpleDateFormat("EEEE HH:mm")
-
         val formattedDate = format.format(date)
-
         val notificationChannel = "Wakelight Enable Option"
 
         // TODO: store the notification id somewhere so we can retrieve it later
         val nextNotificationId = 1
-
-        Log.i("pp time", "Successfully set up the notification builder")
 
         // the intent that we will use for the click action on the notification itself
         val mainIntent = Intent(context, MainActivity::class.java).apply {
@@ -51,24 +51,18 @@ class AlarmChangedReceiver : BroadcastReceiver() {
 
         val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.lightbulb)
                 .setContentTitle("New alarm detected for $formattedDate")
                 .setContentText("Would you like to enable your WakeLight for this alarm?")
                 .setContentIntent(mainPendingIntent)
                 .addAction(R.mipmap.ic_launcher, "Enable", enablePendingIntent)
                 .setAutoCancel(true)
 
-        // TODO: if wakelight currently active, stop it
-
         with(NotificationManagerCompat.from(context)) {
             // Google: notificationId is a unique int for each notification that you must define
             // Me: haha hardcoded 1 go brrrrrr
-            Log.i("suck pp", "I don't even really know what this is but we are here")
             notify(nextNotificationId, builder.build())
-            Log.i("asd","sent the notification")
+            Log.d(this::class.simpleName,"sent the notification")
         }
-
-
-
     }
 }

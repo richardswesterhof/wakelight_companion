@@ -17,35 +17,43 @@
         android:theme="@style/Theme.WakeLightCompanion">
 
         <!-- the activities in the app -->
-        <activity android:name="com.richardswesterhof.wakelightcompanion.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- the action receivers -->
         <!-- intent to notify of alarm change -->
-        <receiver android:name="com.richardswesterhof.wakelightcompanion.AlarmChangedReceiver">
+        <receiver android:name=".broadcast_receivers.AlarmChangedReceiver">
             <intent-filter>
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED"/>
             </intent-filter>
         </receiver>
+        <!--
+            we need to reset the system alarms when the device reboots,
+            since they are not persisted across boots
+        -->
+        <receiver android:name=".broadcast_receivers.AlarmReSetter">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <!-- intent to set a wakelight alarm-->
-        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightEnableRequestReceiver">
+        <receiver android:name=".broadcast_receivers.WakeLightEnableRequestReceiver">
             <intent-filter>
                 <action android:name="com.richardswesterhof.wakelightcompanion.SET_WAKELIGHT_ALARM"/>
             </intent-filter>
         </receiver>
         <!-- intent to start the wakelight alarm -->
-        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightStarter">
+        <receiver android:name=".broadcast_receivers.WakeLightStarter">
             <intent-filter>
                 <action android:name="com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM"/>
             </intent-filter>
         </receiver>
         <!-- intent to stop the wakelight alarm -->
-        <receiver android:name="com.richardswesterhof.wakelightcompanion.WakeLightStopper">
+        <receiver android:name=".broadcast_receivers.WakeLightStopper">
             <intent-filter>
                 <action android:name="com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"/>
             </intent-filter>

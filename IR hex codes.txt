@@ -1,4 +1,0 @@
-on:		0x 00FFA05F
-off:	0x 00FFB04F
-+: 		0x 00FF10EF
--:		0x 00FF50AF

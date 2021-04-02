@@ -1,4 +1,4 @@
-package com.richardswesterhof.wakelightcompanion
+package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
 import android.app.AlarmManager
 import android.content.Context

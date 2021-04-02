@@ -1,29 +1,32 @@
-package com.richardswesterhof.wakelightcompanion
+package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.richardswesterhof.wakelightcompanion.R
 import com.richardswesterhof.wakelightcompanion.implementation_details.*
 
-class WakeLightStarter: BroadcastReceiver() {
+private val starterListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
+private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
+
+class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 
     private val notificationChannel: String = "Wakelight Stop Button"
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val receivedAction: String? = intent.action
-        if(receivedAction != "com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM") {
-            Log.d("WakeLightReceiver", "Bad action: $receivedAction")
-            return
+    override fun trigger(context: Context, intent: Intent) {
+        // check if alarm still exists
+        val au = AlarmUtil(context)
+        val am = au.am
+        if(am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
+            // only if it does start wakelight
+            Log.d("WakeLightStarter", "Received request to start wakelight")
+            sendDisableNotif(context)
+            startWakelight()
         }
-
-        Log.i("start_wakelight", "Received request to start wakelight")
-        sendDisableNotif(context)
-        startWakelight()
     }
 
     fun startWakelight() {
@@ -44,7 +47,7 @@ class WakeLightStarter: BroadcastReceiver() {
 
         val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.lightbulb)
                 .setContentTitle("WakeLight active")
                 .setContentText("Tap to dismiss WakeLight alarm")
                 .setContentIntent(stopPendingIntent)
@@ -59,15 +62,10 @@ class WakeLightStarter: BroadcastReceiver() {
     }
 }
 
-class WakeLightStopper: BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val receivedAction: String? = intent.action
-        if(receivedAction != "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM") {
-            Log.d("WakeLightStopper", "Bad action: $receivedAction")
-            return
-        }
+class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
-        Log.i("WakeLightStopper", "Received request to stop wakelight")
+    override fun trigger(context: Context, intent: Intent) {
+        Log.d("WakeLightStopper", "Received request to stop wakelight")
         stopWakelight()
     }
 
