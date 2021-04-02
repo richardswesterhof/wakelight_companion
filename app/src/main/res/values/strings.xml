@@ -1,12 +1,14 @@
 <!-- hackeroonies that allow us to reuse certain strings in XML -->
 <!DOCTYPE resources [
-    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion">
+    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">
     ]
 >
 
 <resources>
-    <!-- general app metadata -->
+    <!-- general app metadata and internally used string -->
     <string name="app_name">WakeLightCompanion</string>
+    <string name="loading">Loading…</string>
+    <string name="preference_file_store_alarms">&package_prefix;alarms</string>
 
     <!--
         wrappers around the entity resources defined at the top of this file,
@@ -14,17 +16,19 @@
     -->
     <string name="package_prefix">&package_prefix;</string>
 
+    <string name="next_alarm_scheduled">Next WakeLight Alarm is scheduled for: </string>
+
     <!-- notifications -->
         <!-- categories -->
             <!-- wakelight enable -->
     <string name="notif_cat_enable_name">Wakelight Enable Option</string>
     <string name="notif_cat_enable_desc">Notifications that ask you if want to enable your WakeLight for your next upcoming alarm.</string>
-    <string name="notif_cat_enable_id" translatable="false">&package_prefix;.wakelight_enable</string>
+    <string name="notif_cat_enable_id" translatable="false">&package_prefix;wakelight_enable</string>
 
             <!-- wakelight stop -->
     <string name="notif_cat_stop_name">Wakelight Stop Button</string>
     <string name="notif_cat_stop_desc">Notifications that let you stop the WakeLight when it is going off.</string>
-    <string name="notif_cat_stop_id" translatable="false">&package_prefix;.wakelight_stop</string>
+    <string name="notif_cat_stop_id" translatable="false">&package_prefix;wakelight_stop</string>
 
         <!-- individual notifications -->
             <!-- ask enable -->
