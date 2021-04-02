@@ -48,13 +48,14 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 
         val nextNotificationId = 2
 
-        val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.lightbulb)
-                .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
-                .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
-                .setContentIntent(stopPendingIntent)
-                .setAutoCancel(true)
+        val builder = NotificationCompat.Builder(context, notificationChannel)
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.lightbulb)
+            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
+            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
+            .setColor(context.getColor(R.color.navy_blue_light))
+            .setContentIntent(stopPendingIntent)
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
             // Google: notificationId is a unique int for each notification that you must define
@@ -69,10 +70,10 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
-        stopWakelight()
+        stopWakeLight()
     }
 
-    fun stopWakelight() {
+    fun stopWakeLight() {
         // TODO: get stored ip
         val ip = "NONE"
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")

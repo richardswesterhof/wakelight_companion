@@ -49,14 +49,15 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         }
         val enablePendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, enableWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val builder = NotificationCompat.Builder(context, context.resources.getString(R.string.app_name) + notificationChannel)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.lightbulb)
-                .setContentTitle(context.getString(R.string.notif_ask_enable_wakelight_title, formattedDate))
-                .setContentText(context.getString(R.string.notif_ask_enable_wakelight_content))
-                .setContentIntent(mainPendingIntent)
-                .addAction(0, context.getString(R.string.notif_ask_enable_wakelight_confirm_button), enablePendingIntent)
-                .setAutoCancel(true)
+        val builder = NotificationCompat.Builder(context, context.getString(R.string.notif_cat_enable_id))
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.lightbulb)
+            .setContentTitle(context.getString(R.string.notif_ask_enable_wakelight_title, formattedDate))
+            .setContentText(context.getString(R.string.notif_ask_enable_wakelight_content))
+            .setColor(context.getColor(R.color.navy_blue_light))
+            .setContentIntent(mainPendingIntent)
+            .addAction(0, context.getString(R.string.notif_ask_enable_wakelight_confirm_button), enablePendingIntent)
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
             // Google: notificationId is a unique int for each notification that you must define
