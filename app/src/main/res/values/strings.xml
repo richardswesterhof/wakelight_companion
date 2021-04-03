@@ -1,18 +1,27 @@
 <!-- hackeroonies that allow us to reuse certain strings in XML -->
-<!DOCTYPE resources [<!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">]
-    >
+<!DOCTYPE resources [
+    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">
+    <!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm">
+    <!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">
+    <!ENTITY interval_day_every "Everyday">
+    <!ENTITY interval_hour_whole_day "WholeDay">
+] >
 
 <resources>
     <!-- general app metadata and internally used string -->
     <string name="app_name">WakeLight Companion</string>
     <string name="loading">Loading…</string>
+    <string name="settings_button">Settings</string>
     <string name="preference_file_store_internal_vars" translatable="false">&package_prefix;internal_vars</string>
 
     <!--
         wrappers around the entity resources defined at the top of this file,
         so we can use them in the code as well
+        these should all be marked as not translatable!
     -->
     <string name="package_prefix" translatable="false">&package_prefix;</string>
+    <string name="schedule_interval_format" translatable="false">&schedule_interval_format;</string>
+    <string name="interval_format_help_url" translatable="false">&interval_format_help_url;</string>
 
     <string name="next_alarm_scheduled">Next WakeLight Alarm is scheduled for: </string>
 
@@ -40,8 +49,21 @@
 
     <!-- setting names and descriptions -->
     <string name="pref_wakelight_duration_title">WakeLight Duration</string>
-    <string name="pref_wakelight_duration_desc">The amount of minutes the WakeLight should start before your alarm goes off. Note that if you already have your next alarm scheduled and you change this value, it won\'t take effect unless you restart your device</string>
+    <string name="pref_wakelight_duration_desc">The amount of minutes the WakeLight should start before your alarm goes off. Note that if you already have your next alarm scheduled and you change this value, it won\'t take effect unless you restart your device or reset the alarm</string>
     <string name="pref_wakelight_max_percent_title">Maximum Brightness</string>
     <string name="pref_wakelight_max_percent_desc">The maximum brightness percentage to scale to</string>
-    <string name="settings_button">Settings</string>
+    <string name="pref_wakelight_ip_title">WakeLight IP</string>
+    <string name="pref_wakelight_ip_desc">The IP address of the WakeLight. If your router allows it, the hostname will work too</string>
+    <string name="pref_wakelight_schedule_title">Auto Enable Schedule</string>
+    <string name="pref_wakelight_schedule_desc">Times to automatically enable the WakeLight without needing confirmation through a notification. Should be a comma separated list of intervals, where an interval looks like: &schedule_interval_format;. The day name is replaceable by \"&interval_day_every;\" to enable this interval every day, time by \"&interval_hour_whole_day;\" to enable for the whole day</string>
+    <string name="pref_wakelight_schedule_help">Interval Format Help</string>
+    <string name="pref_wakelight_always_auto_enable_title">Always Auto Enable</string>
+    <string name="pref_wakelight_always_auto_enable_desc">If enabled, you won\'t get a notification to enable your WakeLight, instead it will always be enabled for your next alarm</string>
+
+    <string name="pref_cat_networking">Networking</string>
+    <string name="pref_cat_wakelight_alarm_config">WakeLight Alarm Configuration</string>
+    <string name="pref_cat_schedule">Scheduling</string>
+
+
+
 </resources>

@@ -17,9 +17,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
             editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
         }
 
-        val editTextPreference2 = preferenceManager.findPreference<EditTextPreference>("pref_wakelight_max_percent")
-        editTextPreference2!!.setOnBindEditTextListener { editText ->
-            editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-        }
+//        val editTextPreference2 = preferenceManager.findPreference<EditTextPreference>("pref_wakelight_max_percent")
+//        editTextPreference2!!.setOnBindEditTextListener { editText ->
+//            editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+//        }
     }
 }

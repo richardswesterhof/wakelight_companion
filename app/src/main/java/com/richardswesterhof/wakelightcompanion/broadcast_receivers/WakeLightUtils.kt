@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.richardswesterhof.wakelightcompanion.R
 import com.richardswesterhof.wakelightcompanion.implementation_details.*
+import com.richardswesterhof.wakelightcompanion.utils.IdManager
 
 private val starterListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
 private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
@@ -46,7 +47,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         }
         val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val nextNotificationId = 2
+        val nextNotificationId = IdManager.getNextNotifId(context)
 
         val builder = NotificationCompat.Builder(context, notificationChannel)
             .setDefaults(Notification.DEFAULT_ALL)
@@ -70,7 +71,6 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
-
         stopWakeLight()
     }
 

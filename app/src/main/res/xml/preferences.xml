@@ -4,23 +4,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 >
 
-<!--    <SwitchPreferenceCompat-->
-<!--        app:key="notifications"-->
-<!--        app:title="Enable message notifications"/>-->
+    <PreferenceCategory android:title="@string/pref_cat_wakelight_alarm_config">
+        <EditTextPreference
+            android:defaultValue="30"
+            android:icon="@drawable/clock"
+            android:key="pref_wakelight_duration"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_wakelight_duration_desc"
+            android:title="@string/pref_wakelight_duration_title"
+            app:useSimpleSummaryProvider="false" />
 
-    <EditTextPreference
-        android:defaultValue="30"
-        android:key="pref_wakelight_duration"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/pref_wakelight_duration_desc"
-        android:title="@string/pref_wakelight_duration_title" />
+        <SeekBarPreference
+            android:defaultValue="100"
+            android:key="pref_wakelight_max_percent"
+            app:showSeekBarValue="true"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_wakelight_max_percent_desc"
+            android:title="@string/pref_wakelight_max_percent_title"
+            android:icon="@drawable/brightness"/>
+    </PreferenceCategory>
 
-    <EditTextPreference
-        android:defaultValue="100"
-        android:key="pref_wakelight_max_percent"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/pref_wakelight_max_percent_desc"
-        android:title="@string/pref_wakelight_max_percent_title" />
+    <PreferenceCategory android:title="@string/pref_cat_networking">
+        <EditTextPreference
+            android:defaultValue=""
+            android:icon="@drawable/location"
+            android:key="pref_wakelight_ip"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_wakelight_ip_desc"
+            android:title="@string/pref_wakelight_ip_title"
+            app:useSimpleSummaryProvider="false" />
+
+        <!--    <EditTextPreference-->
+        <!--        android:defaultValue=""-->
+        <!--        android:key="pref_wakelight_port"-->
+        <!--        android:selectAllOnFocus="true"-->
+        <!--        android:singleLine="true"-->
+        <!--        android:summary="@string/pref_wakelight_port_desc"-->
+        <!--        android:title="@string/pref_wakelight_port_title" />-->
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_cat_schedule">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="pref_always_auto_enable"
+            android:title="@string/pref_wakelight_always_auto_enable_title"
+            android:summary="@string/pref_wakelight_always_auto_enable_desc"
+            android:icon="@drawable/infinite"
+            android:disableDependentsState="true"/>
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="pref_wakelight_schedule"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:summary="@string/pref_wakelight_schedule_desc"
+            android:title="@string/pref_wakelight_schedule_title"
+            android:icon="@drawable/calendar"
+            android:dependency="pref_always_auto_enable" />
+
+        <Preference
+            android:title="@string/pref_wakelight_schedule_help"
+            android:icon="@drawable/help"
+            android:dependency="pref_always_auto_enable"
+        >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/interval_format_help_url" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

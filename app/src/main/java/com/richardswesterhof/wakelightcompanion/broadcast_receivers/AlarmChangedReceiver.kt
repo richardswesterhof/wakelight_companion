@@ -4,35 +4,60 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.*
+import com.richardswesterhof.wakelightcompanion.utils.IdManager
+import com.richardswesterhof.wakelightcompanion.utils.schedule_interval_regex
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 private val listeningFors: List<String> = listOf("android.app.action.NEXT_ALARM_CLOCK_CHANGED")
 
 class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
 
+    private lateinit var internalPref: SharedPreferences
+    private lateinit var settings: SharedPreferences
+
     override fun trigger(context: Context, intent: Intent) {
         val date: Date? = AlarmUtil(context).getNextAlarmDate()
         Log.d(this::class.simpleName, "next alarm date is set to be $date")
 
-        if(date == null) return
+        internalPref = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
 
-        stopWakeLight(context)
-        sendNotification(context, date)
+        if(date == null) {
+            removeFromStorage()
+        }
+        else {
+            stopWakeLight(context)
+            askEnable(context, date)
+        }
+
     }
 
 
-    fun sendNotification(context: Context, date: Date) {
+    private fun askEnable(context: Context, date: Date) {
+        // the intent that we will broadcast when the "enable" button is clicked
+        val enableWakeLightIntent = Intent(context, WakeLightEnableRequestReceiver::class.java).apply {
+            action = "com.richardswesterhof.wakelightcompanion.SET_WAKELIGHT_ALARM"
+            putExtra("date", date)
+        }
+
+        if(!autoEnabled(context, date, enableWakeLightIntent)) sendAskNotification(context, date, enableWakeLightIntent)
+    }
+
+
+    private fun sendAskNotification(context: Context, date: Date, enableIntent: Intent) {
         val format = SimpleDateFormat("EEEE HH:mm")
         val formattedDate = format.format(date)
 
-        // TODO: store the notification id somewhere so we can retrieve it later
-
-        val nextNotificationId = 1
+        val nextNotificationId = IdManager.getNextNotifId(context)
 
         // the intent that we will use for the click action on the notification itself
         val mainIntent = Intent(context, MainActivity::class.java).apply {
@@ -40,13 +65,9 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         }
         val mainPendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, mainIntent, 0)
 
-        // the intent that we will broadcast when the "enable" button is clicked
-        val enableWakeLightIntent = Intent(context, WakeLightEnableRequestReceiver::class.java).apply {
-            action = "com.richardswesterhof.wakelightcompanion.SET_WAKELIGHT_ALARM"
-            putExtra("date", date)
-            putExtra("id", nextNotificationId)
-        }
-        val enablePendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, enableWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        // if we send the intent through a notification, we want to know the notification id
+        enableIntent.putExtra("id", nextNotificationId)
+        val enablePendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, enableIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(context, context.getString(R.string.notif_cat_enable_id))
             .setDefaults(Notification.DEFAULT_ALL)
@@ -59,20 +80,81 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
-            // Google: notificationId is a unique int for each notification that you must define
-            // Me: haha hardcoded 1 go brrrrrr
             notify(nextNotificationId, builder.build())
             Log.d(this::class.simpleName,"Sent the notification")
         }
     }
 
 
-    fun stopWakeLight(context: Context) {
+    private fun autoEnabled(context: Context, date: Date, enableIntent: Intent): Boolean {
+        // check if the given date falls within an auto enabled interval
+        val schedule = settings.getString("pref_wakelight_schedule", "")!!
+        val intervals = schedule.split(",")
+
+        val alwaysEnable = settings.getBoolean("pref_always_auto_enable", false)
+
+        if(alwaysEnable) {
+            Log.d(this::class.simpleName, "WakeLight was enabled since settings alwaysEnable was true")
+            enableNow(context, enableIntent)
+            return true
+        }
+
+        for(interval in intervals) {
+            val trimmedInterval = interval.trim()
+            val match = schedule_interval_regex.matchEntire(trimmedInterval)
+            val localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+            if(match != null) {
+                Log.d(this::class.simpleName, "$date matches interval \"$trimmedInterval\" (based on regex)")
+                val (intervalDay, hourLow, minuteLow, hourHigh, minuteHigh, wholeDay) = match.destructured
+                val alarmDay = localDate.dayOfWeek.toString().toLowerCase(Locale.ROOT)
+                if(intervalDay.equals(alarmDay, ignoreCase = true) || intervalDay.toLowerCase(Locale.ROOT) == "everyday") {
+                    val hour = localDate.hour
+                    val minute = localDate.minute
+                    // if the whole day is specified
+                    if(wholeDay.toLowerCase(Locale.ROOT) == "wholeday" ||
+                            // if the hour is truly in between the low and high hours of the interval
+                            (hourLow.toInt() < hour && hourHigh.toInt() > hour) ||
+                            // if the hour is equal to the low we need to compare the minutes
+                            (hourLow.toInt() == hour && minuteLow.toInt() <= minute) ||
+                            // if the hour is equal to the high we need to compare the minute as well
+                            (hourHigh.toInt() == hour && minuteHigh.toInt() >= minute)
+                    ) {
+                        Log.d(this::class.simpleName, "$date truly matches interval \"$trimmedInterval\"")
+                        enableNow(context, enableIntent)
+                        return true
+                    }
+                }
+            }
+            else if(trimmedInterval.isNotEmpty()) {
+                Log.w(this::class.simpleName, "\"$trimmedInterval\" does not match the regex")
+                // TODO: send warning to user that his interval doesn't match the pattern
+            }
+        }
+
+        return false
+    }
+
+
+    private fun enableNow(context: Context, enableIntent: Intent) {
+        context.sendBroadcast(enableIntent)
+        // TODO: send info notif that the wakelight was enabled?
+    }
+
+
+    private fun stopWakeLight(context: Context) {
         // create an intent to stop the wakelight and broadcast it
         // so it can be received by tbe WakeLightStopper
         val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
             action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
         }
         context.sendBroadcast(stopWakeLightIntent)
+    }
+
+
+    private fun removeFromStorage() {
+        with(internalPref.edit()) {
+            putLong("nextAlarmMillis", 0)
+            apply()
+        }
     }
 }
