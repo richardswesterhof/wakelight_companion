@@ -18,7 +18,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
     private lateinit var notificationChannel: String
 
     override fun trigger(context: Context, intent: Intent) {
-        // init the notif channel id
+        // init the notification channel id
         notificationChannel = context.resources.getString(R.string.notif_cat_stop_id)
 
         // check if alarm still exists
@@ -70,6 +70,7 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
+
         stopWakeLight()
     }
 

@@ -2,17 +2,22 @@ package com.richardswesterhof.wakelightcompanion
 
 import android.app.*
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
+import com.richardswesterhof.wakelightcompanion.settings_page.SettingsActivity
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setPreferencesToDefaultIfUndefined()
 
         replacePlaceholders()
 
@@ -35,9 +40,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun setPreferencesToDefaultIfUndefined() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+    }
+
+
     private fun replacePlaceholders() {
         val textView = findViewById<View>(R.id.text_next_user_alarm) as TextView
-        val sharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_store_alarms), Context.MODE_PRIVATE)
+        val sharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         val nextAlarm = sharedPrefs.getLong("nextAlarmMillis", 0)
         val nextDate = Date(nextAlarm)
         textView.text = nextDate.toString()
@@ -57,5 +67,11 @@ class MainActivity : AppCompatActivity() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+
+    fun goToSetting(view: View) {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 }

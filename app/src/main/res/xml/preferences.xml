@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+<!--    <SwitchPreferenceCompat-->
+<!--        app:key="notifications"-->
+<!--        app:title="Enable message notifications"/>-->
+
+    <EditTextPreference
+        android:defaultValue="30"
+        android:key="pref_wakelight_duration"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_wakelight_duration_desc"
+        android:title="@string/pref_wakelight_duration_title" />
+
+    <EditTextPreference
+        android:defaultValue="100"
+        android:key="pref_wakelight_max_percent"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_wakelight_max_percent_desc"
+        android:title="@string/pref_wakelight_max_percent_title" />
+</PreferenceScreen>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WakeLight Companion</string>
+    <string name="loading">Laden…</string>
+    <string name="next_alarm_scheduled">Volgende WakeLight Alarm is gezet voor:</string>
+    <string name="notif_cat_enable_name">WakeLight Inschakel Optie</string>
+    <string name="notif_cat_enable_desc">Notificaties die vragen of het Wakelight alarm ingeschakeld moet worden</string>
+    <string name="notif_cat_stop_name">WakeLight stop knop</string>
+    <string name="notif_cat_stop_desc">Notificaties die het WakeLight kunnen stoppen</string>
+    <string name="notif_ask_enable_wakelight_title">Nieuw alarm gedetecteerd voor %1$s</string>
+    <string name="notif_ask_enable_wakelight_confirm_button">Inschakelen</string>
+    <string name="notif_ask_stop_wakelight_title">WakeLight actief</string>
+    <string name="notif_ask_stop_wakelight_content">Tik om WakeLight alarm te stoppen</string>
+    <string name="pref_wakelight_duration_title">WakeLight duratie</string>
+    <string name="pref_wakelight_duration_desc">Het aantal minuten het WakeLight moet starten voor het alarm. Als het volgende alarm al gezet it en deze waarde wordt bewerkt, moet de telefoon opnieuw opgestart worden</string>
+    <string name="pref_wakelight_max_percent_title">Maximale Helderheid</string>
+    <string name="pref_wakelight_max_percent_desc">Het maximale helderheids percentage</string>
+    <string name="settings_button">Instellingen</string>
+    <string name="notif_ask_enable_wakelight_content">Moet het WakeLight ingeschakeld worden voor dit alarm?</string>
+</resources>

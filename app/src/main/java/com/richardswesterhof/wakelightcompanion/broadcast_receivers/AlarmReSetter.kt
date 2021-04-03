@@ -1,6 +1,5 @@
 package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.richardswesterhof.wakelightcompanion.R
@@ -11,7 +10,7 @@ private val listeningFors = listOf("android.intent.action.BOOT_COMPLETED")
 class AlarmReSetter: ExtendedBroadcastReceiver(listeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
-        val sharedPrefs = context.getSharedPreferences(context.getString(R.string.preference_file_store_alarms), Context.MODE_PRIVATE)
+        val sharedPrefs = context.getSharedPreferences(context.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         val date = Date(sharedPrefs.getLong("nextAlarmMillis", 0))
 
         val enableWakeLightIntent = Intent(context, WakeLightEnableRequestReceiver::class.java).apply {

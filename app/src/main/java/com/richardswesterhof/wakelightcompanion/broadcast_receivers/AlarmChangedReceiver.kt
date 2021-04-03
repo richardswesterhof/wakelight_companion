@@ -21,8 +21,7 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
 
         if(date == null) return
 
-        // TODO: if wakelight currently active, stop it
-
+        stopWakeLight(context)
         sendNotification(context, date)
     }
 
@@ -30,9 +29,9 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
     fun sendNotification(context: Context, date: Date) {
         val format = SimpleDateFormat("EEEE HH:mm")
         val formattedDate = format.format(date)
-        val notificationChannel = "Wakelight Enable Option"
 
         // TODO: store the notification id somewhere so we can retrieve it later
+
         val nextNotificationId = 1
 
         // the intent that we will use for the click action on the notification itself
@@ -65,5 +64,15 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
             notify(nextNotificationId, builder.build())
             Log.d(this::class.simpleName,"Sent the notification")
         }
+    }
+
+
+    fun stopWakeLight(context: Context) {
+        // create an intent to stop the wakelight and broadcast it
+        // so it can be received by tbe WakeLightStopper
+        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
+            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
+        }
+        context.sendBroadcast(stopWakeLightIntent)
     }
 }

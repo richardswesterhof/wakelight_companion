@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.*
 import java.util.*
 
@@ -43,12 +44,16 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
             return
         }
 
-        val windowSize: Long = 10*60*1000
-        val systemAlarmMillis: Long = userAlarmMillis - (30*60*1000 + windowSize/2)
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+        val windowMinutes: Long = 10
+        val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration", "30")!!.toLong()
+
+        val windowSize: Long = windowMinutes*60*1000
+        val systemAlarmMillis: Long = userAlarmMillis - (durationMinutes*60*1000 + windowSize/2)
 
 
-        // schedule the system alarm 30 minutes before the user alarm
-        // TODO: make these 30 minutes configurable
+        // schedule the system alarm "durationMinutes" minutes before the user alarm
         val au = AlarmUtil(context)
         val am: AlarmManager = au.getAlarmManager()
 
@@ -64,7 +69,7 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
         am.setWindow(AlarmManager.RTC_WAKEUP, systemAlarmMillis, windowSize, startPendingIntent)
 
         // finally store this alarm in the shared preferences
-        val sharedPref = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_alarms), Context.MODE_PRIVATE)
+        val sharedPref = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putLong("nextAlarmMillis", userAlarmMillis)
             apply()
