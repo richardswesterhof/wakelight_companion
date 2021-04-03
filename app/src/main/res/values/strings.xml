@@ -54,8 +54,10 @@
     <string name="pref_wakelight_max_percent_desc">The maximum brightness percentage to scale to</string>
     <string name="pref_wakelight_ip_title">WakeLight IP</string>
     <string name="pref_wakelight_ip_desc">The IP address of the WakeLight. If your router allows it, the hostname will work too</string>
+    <string name="pref_wakelight_port_title">WakeLight Port</string>
+    <string name="pref_wakelight_port_desc">The port to send commands to at the given IP. Leave blank for default</string>
     <string name="pref_wakelight_schedule_title">Auto Enable Schedule</string>
-    <string name="pref_wakelight_schedule_desc">Times to automatically enable the WakeLight without needing confirmation through a notification. Should be a comma separated list of intervals, where an interval looks like: &schedule_interval_format;. The day name is replaceable by \"&interval_day_every;\" to enable this interval every day, time by \"&interval_hour_whole_day;\" to enable for the whole day</string>
+    <string name="pref_wakelight_schedule_desc">Times to automatically enable the WakeLight without needing confirmation through a notification. Should be a comma separated list of intervals, where an interval looks like: &schedule_interval_format;. The day name is replaceable by \"&interval_day_every;\" (without quotation marks) to enable this interval every day, time by \"&interval_hour_whole_day;\" (without quotation marks) to enable for the whole day</string>
     <string name="pref_wakelight_schedule_help">Interval Format Help</string>
     <string name="pref_wakelight_always_auto_enable_title">Always Auto Enable</string>
     <string name="pref_wakelight_always_auto_enable_desc">If enabled, you won\'t get a notification to enable your WakeLight, instead it will always be enabled for your next alarm</string>

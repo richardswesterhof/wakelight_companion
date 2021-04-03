@@ -7,6 +7,14 @@ fun startWakeLight(ip: String) {
     // TODO: implement this
 }
 
+fun startWakeLight(ip: String, port: String) {
+    // TODO: implement this
+}
+
 fun stopWakeLight(ip: String) {
+    // TODO implement this
+}
+
+fun stopWakeLight(ip: String, port: String) {
     // TODO implement this
 }

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- hackeroonies that allow us to reuse certain strings in XML -->
+<!DOCTYPE resources [
+    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">
+    <!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm">
+    <!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">
+    <!ENTITY interval_day_every "Everyday">
+    <!ENTITY interval_hour_whole_day "WholeDay">
+    ] >
+
 <resources>
     <string name="app_name">WakeLight Companion</string>
     <string name="loading">Laden…</string>
@@ -17,4 +26,16 @@
     <string name="pref_wakelight_max_percent_desc">Het maximale helderheids percentage</string>
     <string name="settings_button">Instellingen</string>
     <string name="notif_ask_enable_wakelight_content">Moet het WakeLight ingeschakeld worden voor dit alarm?</string>
+    <string name="pref_wakelight_ip_title">WakeLight IP</string>
+    <string name="pref_wakelight_ip_desc">Het IP adres van de WakeLight. Als uw router het toelaat werkt de hostname ook</string>
+    <string name="pref_wakelight_port_title">WakeLight Poort</string>
+    <string name="pref_wakelight_port_desc">De poort om commando\'s naar te sturen op het gegeven IP adres</string>
+    <string name="pref_wakelight_schedule_title">Automatisch Inschakelen Schema</string>
+    <string name="pref_wakelight_schedule_desc">Tijden waarop de WakeLight automatisch wordt ingeschakeld zonder bevestiging via een notificatie. Gegeven als een lijst gescheiden door komma\'s, waarin een interval het formaat heeft: &schedule_interval_format;. De dag naam is vervangbaar door \"&interval_day_every;\" (zonder aanhalingstekens) om dit interval elke dag te gebruiken, de tijd is vervangbaar door \"&interval_hour_whole_day;\" (zonder aanhalingstekens) om de hele dag automatisch in te schakelen</string>
+    <string name="pref_wakelight_schedule_help">Interval Formaat Hulp</string>
+    <string name="pref_wakelight_always_auto_enable_title">Altijd Automatisch Inschakelen</string>
+    <string name="pref_wakelight_always_auto_enable_desc">Indien geselecteerd zullen er geen notificaties gestuurd worden, maar de WakeLight zal altijd ingeschakeld worden voor het volgende alarm</string>
+    <string name="pref_cat_networking">Netwerk</string>
+    <string name="pref_cat_wakelight_alarm_config">WakeLight Alarm Configuratie</string>
+    <string name="pref_cat_schedule">Schema</string>
 </resources>

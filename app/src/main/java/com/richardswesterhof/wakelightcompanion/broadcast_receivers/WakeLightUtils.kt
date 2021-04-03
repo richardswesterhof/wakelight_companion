@@ -4,9 +4,11 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.R
 import com.richardswesterhof.wakelightcompanion.implementation_details.*
 import com.richardswesterhof.wakelightcompanion.utils.IdManager
@@ -17,10 +19,13 @@ private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.w
 class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 
     private lateinit var notificationChannel: String
+    private lateinit var settings: SharedPreferences
 
     override fun trigger(context: Context, intent: Intent) {
         // init the notification channel id
         notificationChannel = context.resources.getString(R.string.notif_cat_stop_id)
+
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
 
         // check if alarm still exists
         val au = AlarmUtil(context)
@@ -34,10 +39,12 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
     }
 
     fun startWakelight() {
-        // TODO: get stored ip
-        val ip = "NONE"
+        val ip = settings.getString("pref_wakelight_ip", "")!!
+        val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
-        startWakeLight(ip)
+        if(port.isNotBlank()) startWakeLight(ip, port)
+        else startWakeLight(ip)
+
     }
 
     fun sendDisableNotif(context: Context) {
@@ -69,15 +76,21 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 
 class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
+    private lateinit var settings: SharedPreferences
+
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
+
+        settings = PreferenceManager.getDefaultSharedPreferences(context)
+
         stopWakeLight()
     }
 
     fun stopWakeLight() {
-        // TODO: get stored ip
-        val ip = "NONE"
+        val ip = settings.getString("pref_wakelight_ip", "")!!
+        val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
-        stopWakeLight(ip)
+        if(port.isNotBlank()) stopWakeLight(ip, port)
+        else stopWakeLight(ip)
     }
 }
