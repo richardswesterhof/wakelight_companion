@@ -1,26 +1,71 @@
 package com.richardswesterhof.wakelightcompanion
 
 import android.app.*
+import androidx.fragment.app.Fragment
 import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.richardswesterhof.wakelightcompanion.settings_page.SettingsActivity
-import java.util.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.richardswesterhof.wakelightcompanion.settings_page.SettingsFragment
 
 
 class MainActivity: AppCompatActivity() {
+
+    private lateinit var sharedPrefs: SharedPreferences
+
+    private var navListener = BottomNavigationView.OnNavigationItemSelectedListener {
+        val nextAlarmMillis = sharedPrefs.getLong("nextAlarmMillis", 0)
+        val selectedFragment: Fragment? = when(it.itemId) {
+            R.id.nav_home -> MainFragment.newInstance(nextAlarmMillis)
+            R.id.nav_settings -> SettingsFragment.newInstance()
+            else -> null
+        }
+
+        if(selectedFragment == null) {
+            Log.e(this::class.simpleName, "Cannot navigate to: \"${it.itemId}\": unknown id")
+            false
+        }
+        else {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit()
+
+            true
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        sharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         setPreferencesToDefaultIfUndefined()
 
-        replacePlaceholders()
+        createNotificationChannels()
 
+        // add the bottom navigation
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigation.setOnNavigationItemSelectedListener(navListener)
+
+        // set main fragment active
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, MainFragment())
+            .commit()
+    }
+
+
+    private fun setPreferencesToDefaultIfUndefined() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+    }
+
+
+    private fun createNotificationChannels() {
         val enableNotifCat = getString(R.string.notif_cat_enable_name)
         val enableNotifDesc = getString(R.string.notif_cat_enable_desc)
 
@@ -40,20 +85,6 @@ class MainActivity: AppCompatActivity() {
     }
 
 
-    private fun setPreferencesToDefaultIfUndefined() {
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-    }
-
-
-    private fun replacePlaceholders() {
-        val textView = findViewById<View>(R.id.text_next_user_alarm) as TextView
-        val sharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
-        val nextAlarm = sharedPrefs.getLong("nextAlarmMillis", 0)
-        val nextDate = Date(nextAlarm)
-        textView.text = nextDate.toString()
-    }
-
-
     private fun createNotificationChannel(
         name: String,
         descriptionText: String,
@@ -67,11 +98,5 @@ class MainActivity: AppCompatActivity() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
-    }
-
-
-    fun goToSetting(view: View) {
-        val intent = Intent(this, SettingsActivity::class.java)
-        startActivity(intent)
     }
 }

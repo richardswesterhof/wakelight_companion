@@ -2,8 +2,10 @@ okay so basically:
 
 COMPLETE: when a new alarm is set (or changed), send a notification that the wakelight will be activated 30 minutes before the alarm
 COMPLETE: allow user to disable wakelight for this alarm
-allow user to set schedule in which the wakelight should be enabled for alarms and outside it it should at most ask to enable wakelight
-allow user to change the window before the alarm time in which the wakelight will start
+COMPLETE: allow user to set schedule in which the wakelight should be enabled for alarms and outside it it should at most ask to enable wakelight
+COMPLETE: allow user to change the window before the alarm time in which the wakelight will start
+
+allow schedule regex validation
 
 do actual wakelight functionality
 

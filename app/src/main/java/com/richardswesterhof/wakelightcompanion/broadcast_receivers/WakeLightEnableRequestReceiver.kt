@@ -39,6 +39,8 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
 
     fun scheduleAlarm(context: Context, date: Date) {
         val userAlarmMillis = date.time
+        // this can happen if the device was turned off at the time the alarm should have been enabled
+        // since we can also get here from BOOT_COMPLETED
         if(userAlarmMillis < System.currentTimeMillis()) {
             Log.w(this::class.simpleName, "Date $date is in the past, alarm will not be set")
             return

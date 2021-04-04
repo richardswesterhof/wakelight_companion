@@ -1,17 +1,12 @@
 <!-- hackeroonies that allow us to reuse certain strings in XML -->
-<!DOCTYPE resources [
-    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">
-    <!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm">
-    <!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">
-    <!ENTITY interval_day_every "Everyday">
-    <!ENTITY interval_hour_whole_day "WholeDay">
-] >
+<!DOCTYPE resources [<!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion."><!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm"><!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html"><!ENTITY interval_day_every "Everyday"><!ENTITY interval_hour_whole_day "WholeDay">] >
 
 <resources>
     <!-- general app metadata and internally used string -->
     <string name="app_name">WakeLight Companion</string>
     <string name="loading">Loading…</string>
-    <string name="settings_button">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
     <string name="preference_file_store_internal_vars" translatable="false">&package_prefix;internal_vars</string>
 
     <!--
@@ -65,7 +60,6 @@
     <string name="pref_cat_networking">Networking</string>
     <string name="pref_cat_wakelight_alarm_config">WakeLight Alarm Configuration</string>
     <string name="pref_cat_schedule">Scheduling</string>
-
 
 
 </resources>

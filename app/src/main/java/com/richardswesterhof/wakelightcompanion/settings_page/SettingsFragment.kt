@@ -11,6 +11,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        // access arguments fom newInstance like:
+        // arguments.get[TYPE]("name", default)
+
         // we have to do this bs because google can't implement using the "inputType" property in the xml properly :)
         val editTextPreferenceDuration = preferenceManager.findPreference<EditTextPreference>("pref_wakelight_duration")
         editTextPreferenceDuration!!.setOnBindEditTextListener { editText ->
@@ -21,5 +24,16 @@ class SettingsFragment: PreferenceFragmentCompat() {
         editTextPreferencePort!!.setOnBindEditTextListener { editText ->
             editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
         }
+    }
+
+
+    companion object {
+        @JvmStatic
+        fun newInstance(): SettingsFragment =
+            SettingsFragment().apply {
+                arguments = Bundle().apply {
+                    // do put[TYPE]("name", value) here to add arguments
+                }
+            }
     }
 }

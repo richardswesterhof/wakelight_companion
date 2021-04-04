@@ -24,7 +24,6 @@
     <string name="pref_wakelight_duration_desc">Het aantal minuten het WakeLight moet starten voor het alarm. Als het volgende alarm al gezet it en deze waarde wordt bewerkt, moet de telefoon opnieuw opgestart worden</string>
     <string name="pref_wakelight_max_percent_title">Maximale Helderheid</string>
     <string name="pref_wakelight_max_percent_desc">Het maximale helderheids percentage</string>
-    <string name="settings_button">Instellingen</string>
     <string name="notif_ask_enable_wakelight_content">Moet het WakeLight ingeschakeld worden voor dit alarm?</string>
     <string name="pref_wakelight_ip_title">WakeLight IP</string>
     <string name="pref_wakelight_ip_desc">Het IP adres van de WakeLight. Als uw router het toelaat werkt de hostname ook</string>
@@ -38,4 +37,6 @@
     <string name="pref_cat_networking">Netwerk</string>
     <string name="pref_cat_wakelight_alarm_config">WakeLight Alarm Configuratie</string>
     <string name="pref_cat_schedule">Schema</string>
+    <string name="settings">Instellingen</string>
+    <string name="home">Thuis</string>
 </resources>
