@@ -52,10 +52,12 @@ class MainActivity: AppCompatActivity() {
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navListener)
 
+        val nextAlarmMillis = sharedPrefs.getLong("nextAlarmMillis", 0)
+
         // set main fragment active
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container, MainFragment())
+            .replace(R.id.fragment_container, MainFragment.newInstance(nextAlarmMillis))
             .commit()
     }
 

@@ -49,11 +49,11 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         val windowMinutes: Long = 10
-        val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration", "30")!!.toLong()
+        val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration1", "15")!!.toLong() +
+                sharedPrefs.getString("pref_wakelight_duration2", "15")!!.toLong()
 
-        val windowSize: Long = windowMinutes*60*1000
+        val windowSize: Long = windowMinutes * 60 * 1000
         val systemAlarmMillis: Long = userAlarmMillis - (durationMinutes*60*1000 + windowSize/2)
-
 
         // schedule the system alarm "durationMinutes" minutes before the user alarm
         val au = AlarmUtil(context)

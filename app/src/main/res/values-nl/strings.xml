@@ -20,8 +20,8 @@
     <string name="notif_ask_enable_wakelight_confirm_button">Inschakelen</string>
     <string name="notif_ask_stop_wakelight_title">WakeLight actief</string>
     <string name="notif_ask_stop_wakelight_content">Tik om WakeLight alarm te stoppen</string>
-    <string name="pref_wakelight_duration_title">WakeLight duratie</string>
-    <string name="pref_wakelight_duration_desc">Het aantal minuten het WakeLight moet starten voor het alarm. Als het volgende alarm al gezet it en deze waarde wordt bewerkt, moet de telefoon opnieuw opgestart worden</string>
+    <string name="pref_wakelight_duration1_title">WakeLight duratie</string>
+    <string name="pref_wakelight_duration1_desc">Het aantal minuten het WakeLight moet starten voor het alarm. Als het volgende alarm al gezet it en deze waarde wordt bewerkt, moet de telefoon opnieuw opgestart worden</string>
     <string name="pref_wakelight_max_percent_title">Maximale Helderheid</string>
     <string name="pref_wakelight_max_percent_desc">Het maximale helderheids percentage</string>
     <string name="notif_ask_enable_wakelight_content">Moet het WakeLight ingeschakeld worden voor dit alarm?</string>

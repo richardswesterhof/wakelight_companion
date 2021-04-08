@@ -6,6 +6,11 @@
         android:minSdkVersion="29"
         android:targetSdkVersion="30" />
 
+    <!-- specify permissions needed -->
+    <!-- internet and network state are needed for lan control of the light bulb -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:extractNativeLibs="false"
@@ -14,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WakeLightCompanion">
-        <activity android:name=".settings_page.SettingsActivity"></activity>
+        <activity android:name=".settings_page.SettingsActivity" />
         <!-- the activities in the app -->
         <activity android:name=".MainActivity">
             <intent-filter>

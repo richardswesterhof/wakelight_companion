@@ -34,16 +34,18 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
             sendDisableNotif(context)
-            startWakelight()
+            startWakelight(context)
         }
     }
 
-    fun startWakelight() {
+    fun startWakelight(context: Context) {
         val ip = settings.getString("pref_wakelight_ip", "")!!
         val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
-        if(port.isNotBlank()) startWakeLight(ip, port)
-        else startWakeLight(ip)
+        val portInt = port.toIntOrNull()
+        val yeelight = YeelightWrapper()
+        if(port.isNotBlank() && portInt != null) yeelight.startWakeLight(context, ip, portInt)
+        else yeelight.startWakeLight(context, ip, null)
 
     }
 
@@ -90,7 +92,9 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
         val ip = settings.getString("pref_wakelight_ip", "")!!
         val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
-        if(port.isNotBlank()) stopWakeLight(ip, port)
-        else stopWakeLight(ip)
+        val portInt = port.toIntOrNull()
+        val yeelight = YeelightWrapper()
+        if(port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
+        else yeelight.stopWakeLight(ip, null)
     }
 }
