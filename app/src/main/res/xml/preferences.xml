@@ -6,7 +6,7 @@
 
     <PreferenceCategory android:title="@string/pref_cat_wakelight_alarm_config">
         <EditTextPreference
-            android:defaultValue="15"
+            android:defaultValue="30"
             android:icon="@drawable/clock"
             android:key="pref_wakelight_duration1"
             android:selectAllOnFocus="true"
@@ -15,15 +15,15 @@
             android:title="@string/pref_wakelight_duration1_title"
             app:useSimpleSummaryProvider="false" />
 
-        <EditTextPreference
-            android:defaultValue="15"
-            android:icon="@drawable/clock"
-            android:key="pref_wakelight_duration2"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_wakelight_duration2_desc"
-            android:title="@string/pref_wakelight_duration2_title"
-            app:useSimpleSummaryProvider="false" />
+<!--        <EditTextPreference-->
+<!--            android:defaultValue="15"-->
+<!--            android:icon="@drawable/clock"-->
+<!--            android:key="pref_wakelight_duration2"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:summary="@string/pref_wakelight_duration2_desc"-->
+<!--            android:title="@string/pref_wakelight_duration2_title"-->
+<!--            app:useSimpleSummaryProvider="false" />-->
 
         <EditTextPreference
             android:defaultValue="1700"
@@ -35,15 +35,15 @@
             android:title="@string/pref_wakelight_start_temp_title"
             app:useSimpleSummaryProvider="false" />
 
-        <EditTextPreference
-            android:defaultValue="2000"
-            android:icon="@drawable/thermometer"
-            android:key="pref_wakelight_mid_color_temp"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_wakelight_mid_temp_desc"
-            android:title="@string/pref_wakelight_mid_temp_title"
-            app:useSimpleSummaryProvider="false" />
+<!--        <EditTextPreference-->
+<!--            android:defaultValue="2000"-->
+<!--            android:icon="@drawable/thermometer"-->
+<!--            android:key="pref_wakelight_mid_color_temp"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:summary="@string/pref_wakelight_mid_temp_desc"-->
+<!--            android:title="@string/pref_wakelight_mid_temp_title"-->
+<!--            app:useSimpleSummaryProvider="false" />-->
 
         <EditTextPreference
             android:defaultValue="5000"
@@ -55,19 +55,19 @@
             android:title="@string/pref_wakelight_end_temp_title"
             app:useSimpleSummaryProvider="false" />
 
-        <SeekBarPreference
-            android:defaultValue="50"
-            android:key="pref_wakelight_mid_brightness"
-            app:showSeekBarValue="true"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_wakelight_mid_percent_desc"
-            android:title="@string/pref_wakelight_mid_percent_title"
-            android:icon="@drawable/brightness"/>
+<!--        <SeekBarPreference-->
+<!--            android:defaultValue="50"-->
+<!--            android:key="pref_wakelight_mid_brightness"-->
+<!--            app:showSeekBarValue="true"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:summary="@string/pref_wakelight_mid_percent_desc"-->
+<!--            android:title="@string/pref_wakelight_mid_percent_title"-->
+<!--            android:icon="@drawable/brightness"/>-->
 
         <SeekBarPreference
             android:defaultValue="100"
-            android:key="pref_wakelight_end_percent"
+            android:key="pref_wakelight_end_brightness"
             app:showSeekBarValue="true"
             android:selectAllOnFocus="true"
             android:singleLine="true"

@@ -31,14 +31,11 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         internalPref = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         settings = PreferenceManager.getDefaultSharedPreferences(context)
 
-        if(date == null) {
-            removeFromStorage()
-        }
-        else {
-            stopWakeLight(context)
-            askEnable(context, date)
-        }
+        // always try to stop current wakelight
+        stopWakeLight(context)
 
+        if(date == null) removeFromStorage()
+        else askEnable(context, date)
     }
 
 

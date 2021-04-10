@@ -49,8 +49,8 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         val windowMinutes: Long = 10
-        val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration1", "15")!!.toLong() +
-                sharedPrefs.getString("pref_wakelight_duration2", "15")!!.toLong()
+        val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration1", "30")!!.toLong() // +
+//                sharedPrefs.getString("pref_wakelight_duration2", "15")!!.toLong()
 
         val windowSize: Long = windowMinutes * 60 * 1000
         val systemAlarmMillis: Long = userAlarmMillis - (durationMinutes*60*1000 + windowSize/2)
@@ -68,8 +68,13 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
         val startPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, startWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         // allow a window size of 10 minutes (i.e. 5 minutes earlier or later)
         // note that android implements the window as a start time and a windows size however
-        am.setWindow(AlarmManager.RTC_WAKEUP, systemAlarmMillis, windowSize, startPendingIntent)
+//        am.setWindow(AlarmManager.RTC_WAKEUP, systemAlarmMillis, windowSize, startPendingIntent)
 
+        // set an exact alarm, not sure what the difference between setExactAndAllowWhileIdle and setExact is though,
+        // android docs suggest that setExact should already be exact without restrictions anyway:
+        // "[setExact] does not permit the OS to adjust the delivery time. The alarm will be delivered as nearly as possible to the requested trigger time"
+        // but I guess using setExactAndAllowWhileIdle should be the intended way?
+        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, systemAlarmMillis, startPendingIntent)
         // finally store this alarm in the shared preferences
         val sharedPref = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
