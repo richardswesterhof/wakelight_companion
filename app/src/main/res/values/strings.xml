@@ -1,0 +1,76 @@
+<!-- hackeroonies that allow us to reuse certain strings in XML -->
+<!DOCTYPE resources [<!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion."><!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm"><!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html"><!ENTITY interval_day_every "Everyday"><!ENTITY interval_hour_whole_day "WholeDay">] >
+
+<resources>
+    <!-- general app metadata and internally used string -->
+    <string name="app_name">WakeLight Companion</string>
+    <string name="loading">Loading…</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="preference_file_store_internal_vars" translatable="false">&package_prefix;internal_vars</string>
+
+    <!--
+        wrappers around the entity resources defined at the top of this file,
+        so we can use them in the code as well
+        these should all be marked as not translatable!
+    -->
+    <string name="package_prefix" translatable="false">&package_prefix;</string>
+    <string name="schedule_interval_format" translatable="false">&schedule_interval_format;</string>
+    <string name="interval_format_help_url" translatable="false">&interval_format_help_url;</string>
+
+    <string name="next_alarm_scheduled">Next WakeLight Alarm is scheduled for: </string>
+
+    <!-- notifications -->
+    <!-- categories -->
+    <!-- wakelight enable -->
+    <string name="notif_cat_enable_name">Wakelight Enable Option</string>
+    <string name="notif_cat_enable_desc">Notifications that ask you if want to enable your WakeLight for your next upcoming alarm.</string>
+    <string name="notif_cat_enable_id" translatable="false">&package_prefix;wakelight_enable</string>
+
+    <!-- wakelight stop -->
+    <string name="notif_cat_stop_name">Wakelight Stop Button</string>
+    <string name="notif_cat_stop_desc">Notifications that let you stop the WakeLight when it is going off.</string>
+    <string name="notif_cat_stop_id" translatable="false">&package_prefix;wakelight_stop</string>
+
+    <!-- individual notifications -->
+    <!-- ask enable -->
+    <string name="notif_ask_enable_wakelight_title">New alarm detected for %1$s</string>
+    <string name="notif_ask_enable_wakelight_content">Would you like to enable your WakeLight for this alarm?</string>
+    <string name="notif_ask_enable_wakelight_confirm_button">Enable</string>
+    <!-- button stop -->
+    <string name="notif_ask_stop_wakelight_title">WakeLight active</string>
+    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm</string>
+
+
+    <!-- setting names and descriptions -->
+    <string name="pref_wakelight_duration1_title">WakeLight Duration</string>
+    <string name="pref_wakelight_duration1_desc">The amount of minutes the WakeLight should start before your regular alarm. Note that if you already have your next alarm scheduled and you change this value, it won\'t take effect unless you restart your device or reset the alarm</string>
+    <string name="pref_wakelight_duration2_title">Second Transition Duration</string>
+    <string name="pref_wakelight_duration2_desc">The amount of minutes in the second duration.</string>
+    <string name="pref_wakelight_mid_percent_title">Intermediate Brightness</string>
+    <string name="pref_wakelight_mid_percent_desc">The brightness to scale to in the first transition</string>
+    <string name="pref_wakelight_max_percent_title">Maximum Brightness</string>
+    <string name="pref_wakelight_max_percent_desc">The brightness to scale to</string>
+    <string name="pref_wakelight_start_temp_title">Starting Color Temperature</string>
+    <string name="pref_wakelight_start_temp_desc">The color temperature to set at the start, in Kelvin</string>
+    <string name="pref_wakelight_mid_temp_title">Intermediate Color Temperature</string>
+    <string name="pref_wakelight_mid_temp_desc">The color temperature at the end of the first transition, and thereby the start of the second transition</string>
+    <string name="pref_wakelight_end_temp_title">Final Color Temperature</string>
+    <string name="pref_wakelight_end_temp_desc">The color temperature to scale to, in Kelvin. This is also the temperature the light will stay at at the end of the alarm</string>
+
+    <string name="pref_wakelight_ip_title">WakeLight IP</string>
+    <string name="pref_wakelight_ip_desc">The IP address of the WakeLight. If your router allows it, the hostname will work too</string>
+    <string name="pref_wakelight_port_title">WakeLight Port</string>
+    <string name="pref_wakelight_port_desc">The port to send commands to at the given IP. Leave blank for default</string>
+    <string name="pref_wakelight_schedule_title">Auto Enable Schedule</string>
+    <string name="pref_wakelight_schedule_desc">Times to automatically enable the WakeLight without needing confirmation through a notification. Should be a comma separated list of intervals, where an interval looks like: &schedule_interval_format;. The day name is replaceable by \"&interval_day_every;\" (without quotation marks) to enable this interval every day, time by \"&interval_hour_whole_day;\" (without quotation marks) to enable for the whole day</string>
+    <string name="pref_wakelight_schedule_help">Interval Format Help</string>
+    <string name="pref_wakelight_always_auto_enable_title">Always Auto Enable</string>
+    <string name="pref_wakelight_always_auto_enable_desc">If enabled, you won\'t get a notification to enable your WakeLight, instead it will always be enabled for your next alarm</string>
+
+    <string name="pref_cat_networking">Networking</string>
+    <string name="pref_cat_wakelight_alarm_config">WakeLight Alarm Configuration</string>
+    <string name="pref_cat_schedule">Scheduling</string>
+
+
+</resources>
