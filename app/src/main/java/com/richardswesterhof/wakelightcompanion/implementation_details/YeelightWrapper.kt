@@ -66,7 +66,7 @@ class YeelightWrapper: ViewModel() {
         startingColorTemp = clampStringPref("pref_wakelight_start_color_temp", 1700, minColorTemp, maxColorTemp)
 //        val midColorTemp = clampStringPref("pref_wakelight_mid_color_temp", 2000, minColorTemp, maxColorTemp)
         endingColorTemp = clampStringPref("pref_wakelight_end_color_temp", 5000, minColorTemp, maxColorTemp)
-        val startingBrightness = clampIntPref("pref_wakelight_start_brightness", 1, 0, 100)
+        startingBrightness = clampIntPref("pref_wakelight_start_brightness", 1, 0, 100)
 //        val midBrightness = clampIntPref("pref_wakelight_mid_brightness", 50, 0, 100)
         endingBrightness = clampIntPref("pref_wakelight_end_brightness", 100, 0, 100)
 
