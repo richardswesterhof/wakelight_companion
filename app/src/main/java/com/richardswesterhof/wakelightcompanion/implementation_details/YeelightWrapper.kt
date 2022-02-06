@@ -1,18 +1,24 @@
 package com.richardswesterhof.wakelightcompanion.implementation_details
 
+import android.app.Notification
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.mollin.yapi.YeelightDevice
+import com.mollin.yapi.YeelightDeviceMeta
+import com.mollin.yapi.YeelightDiscoveryManager
 import com.mollin.yapi.command.YeelightCommand
-import com.mollin.yapi.enumeration.YeelightEffect
 import com.mollin.yapi.enumeration.YeelightFlowAction
 import com.mollin.yapi.flow.YeelightFlow
 import com.mollin.yapi.flow.transition.YeelightColorTemperatureTransition
 import com.mollin.yapi.utils.YeelightUtils
+import com.richardswesterhof.wakelightcompanion.R
+import com.richardswesterhof.wakelightcompanion.utils.IdManager
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -39,12 +45,56 @@ class YeelightWrapper: ViewModel() {
     private var startingBrightness: Int = 1
 
 
+    fun startWakeLight(context: Context, id: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val devices = YeelightDiscoveryManager.search()
+            // there should only be one device that matches the id
+            with(devices.filter { it.id == id }) {
+                when {
+                    size > 0 -> {
+                        val device = this[0]
+                        Log.d("device found", "Device with id $id has been found on the network on ip ${device.ip}")
+                        startWakeLight(context, device.ip, device.port)
+                    }
+                    else -> {
+                        Log.w("device not found", "Could not find device with id '$id'")
+                        sendNotifIdNotActive(context, id)
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun sendNotifIdNotActive(context: Context, id: String) {
+        val nextNotificationId = IdManager.getNextNotifId(context)
+
+        val builder = NotificationCompat.Builder(context, context.getString(R.string.notif_cat_warning_id))
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.warning)
+            .setContentTitle(context.getString(R.string.notif_device_not_found_title))
+            .setContentText(context.getString(R.string.notif_device_not_found_content, id))
+            .setColor(context.getColor(R.color.navy_blue_light))
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(nextNotificationId, builder.build())
+            Log.d(this::class.simpleName,"Sent the notification")
+        }
+    }
+
+
     fun startWakeLight(context: Context, ip: String, port: Int?) {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         initVars()
 
         val flow = createFlow(duration1, /* midColorTemp */ endingColorTemp, /* midBrightness */ endingBrightness)
+
+        // testing
+//        viewModelScope.launch(Dispatchers.IO) {
+//            Log.d("yeelightinfo", YeelightDiscoveryManager.search().toString())
+//        }
 
         // create a new coroutine to move the execution off the UI thread
         viewModelScope.launch(Dispatchers.IO) {
