@@ -32,7 +32,7 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         settings = PreferenceManager.getDefaultSharedPreferences(context)
 
         // always try to stop current wakelight
-        stopWakeLight(context)
+//        stopWakeLight(context)
 
         if(date == null) removeFromStorage()
         else askEnable(context, date)

@@ -9,14 +9,9 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
-import com.mollin.yapi.YeelightDeviceMeta
-import com.mollin.yapi.YeelightDiscoveryManager
 import com.richardswesterhof.wakelightcompanion.R
 import com.richardswesterhof.wakelightcompanion.implementation_details.*
 import com.richardswesterhof.wakelightcompanion.utils.IdManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 private val starterListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
 private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
@@ -46,13 +41,9 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
     fun startWakelight(context: Context) {
         val prefID = settings.getString("pref_wakelight_id", "")!!
 
-    //        val ip = settings.getString("pref_wakelight_ip", "")!!
-    //        val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
-    //        val portInt = port.toIntOrNull()
         val yeelight = YeelightWrapper()
         yeelight.startWakeLight(context, prefID)
-    //        else yeelight.startWakeLight(context, ip, null)
     }
 
 
@@ -87,19 +78,14 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
-
         settings = PreferenceManager.getDefaultSharedPreferences(context)
-
-        stopWakeLight()
+        stopWakeLight(context)
     }
 
-    fun stopWakeLight() {
-        val ip = settings.getString("pref_wakelight_ip", "")!!
-        val port = settings.getString("pref_wakelight_port", "")!!
+    fun stopWakeLight(context: Context) {
+        val prefID = settings.getString("pref_wakelight_id", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
-        val portInt = port.toIntOrNull()
         val yeelight = YeelightWrapper()
-        if(port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
-        else yeelight.stopWakeLight(ip, null)
+        yeelight.stopWakeLight(context, prefID)
     }
 }
