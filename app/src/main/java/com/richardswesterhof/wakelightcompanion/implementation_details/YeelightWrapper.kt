@@ -1,7 +1,9 @@
 package com.richardswesterhof.wakelightcompanion.implementation_details
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -19,6 +21,7 @@ import com.mollin.yapi.flow.YeelightFlow
 import com.mollin.yapi.flow.transition.YeelightColorTemperatureTransition
 import com.mollin.yapi.utils.YeelightUtils
 import com.richardswesterhof.wakelightcompanion.R
+import com.richardswesterhof.wakelightcompanion.broadcast_receivers.WakeLightStopper
 import com.richardswesterhof.wakelightcompanion.utils.IdManager
 import kotlinx.coroutines.*
 import org.apache.commons.csv.CSVFormat
@@ -67,6 +70,7 @@ class YeelightWrapper: ViewModel() {
             device?.let{
                 Log.d("device found", "Device with id $id has been found on the network on ip ${device.ip}")
                 startWakeLight(context, device.ip, device.port)
+                sendDisableNotif(context, id)
             } ?: run {
                 Log.w("device not found", "Could not find device with id '$id'")
                 sendNotifIdNotActive(context, id)
@@ -140,9 +144,9 @@ class YeelightWrapper: ViewModel() {
                 val input: Reader = FileReader(deviceFile)
                 val records: Iterable<CSVRecord> = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(input)
                 with(records.filter { it[HEADER_DEVICE_ID] == deviceId }) {
-                    val device = this[0]
                     when {
                         size > 0 -> {
+                            val device = this[0]
                             val metaInfo = YeelightDeviceMeta().apply {
                                 this.id = deviceId
                                 this.ip = device[HEADER_DEVICE_IP]
@@ -201,6 +205,30 @@ class YeelightWrapper: ViewModel() {
             .setContentTitle(context.getString(R.string.notif_device_not_found_title))
             .setContentText(context.getString(R.string.notif_device_not_found_content, id))
             .setColor(context.getColor(R.color.navy_blue_light))
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(nextNotificationId, builder.build())
+            Log.d(this::class.simpleName,"Sent the notification")
+        }
+    }
+
+    fun sendDisableNotif(context: Context, id: String) {
+        // the intent that we will use for the click action on the notification itself
+        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
+            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
+        }
+        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val nextNotificationId = IdManager.getNextNotifId(context)
+
+        val builder = NotificationCompat.Builder(context, context.getString(R.string.notif_cat_stop_id))
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.lightbulb)
+            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
+            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content, id))
+            .setColor(context.getColor(R.color.navy_blue_light))
+            .setContentIntent(stopPendingIntent)
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {

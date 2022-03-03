@@ -45,7 +45,7 @@
     <string name="notif_ask_enable_wakelight_confirm_button">Enable</string>
     <!-- button stop -->
     <string name="notif_ask_stop_wakelight_title">WakeLight active</string>
-    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm</string>
+    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm (id %1$s)</string>
     <!-- device not found-->
     <string name="notif_device_not_found_title">Device not found</string>
     <string name="notif_device_not_found_content">The device you selected (%1$s) was not found on the network</string>

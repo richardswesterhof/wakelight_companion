@@ -33,7 +33,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         if(am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
-            sendDisableNotif(context)
+//            sendDisableNotif(context)
             startWakelight(context)
         }
     }
@@ -47,29 +47,29 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
     }
 
 
-    fun sendDisableNotif(context: Context) {
-        // the intent that we will use for the click action on the notification itself
-        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
-            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
-        }
-        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val nextNotificationId = IdManager.getNextNotifId(context)
-
-        val builder = NotificationCompat.Builder(context, notificationChannel)
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setSmallIcon(R.drawable.lightbulb)
-            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
-            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
-            .setColor(context.getColor(R.color.navy_blue_light))
-            .setContentIntent(stopPendingIntent)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(nextNotificationId, builder.build())
-            Log.d(this::class.simpleName,"Sent the notification")
-        }
-    }
+//    fun sendDisableNotif(context: Context) {
+//        // the intent that we will use for the click action on the notification itself
+//        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
+//            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
+//        }
+//        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+//
+//        val nextNotificationId = IdManager.getNextNotifId(context)
+//
+//        val builder = NotificationCompat.Builder(context, notificationChannel)
+//            .setDefaults(Notification.DEFAULT_ALL)
+//            .setSmallIcon(R.drawable.lightbulb)
+//            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
+//            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
+//            .setColor(context.getColor(R.color.navy_blue_light))
+//            .setContentIntent(stopPendingIntent)
+//            .setAutoCancel(true)
+//
+//        with(NotificationManagerCompat.from(context)) {
+//            notify(nextNotificationId, builder.build())
+//            Log.d(this::class.simpleName,"Sent the notification")
+//        }
+//    }
 }
 
 class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
