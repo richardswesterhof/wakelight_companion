@@ -48,7 +48,7 @@ class WakeLightEnableRequestReceiver: ExtendedBroadcastReceiver(listeningFors) {
 
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val windowMinutes: Long = 10
+        val windowMinutes: Long = 0 // effectively disable windowing
         val durationMinutes: Long = sharedPrefs.getString("pref_wakelight_duration1", "30")!!.toLong() // +
 //                sharedPrefs.getString("pref_wakelight_duration2", "15")!!.toLong()
 
