@@ -1,4 +1,4 @@
-package com.richardswesterhof.wakelightcompanion.implementation_details
+package com.richardswesterhof.wakelightcompanion.implementation_details.yeelight
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,24 +8,24 @@ import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.mollin.yapi.YeelightDevice
 import com.mollin.yapi.command.YeelightCommand
-import com.mollin.yapi.enumeration.YeelightEffect
 import com.mollin.yapi.enumeration.YeelightFlowAction
 import com.mollin.yapi.flow.YeelightFlow
 import com.mollin.yapi.flow.transition.YeelightColorTemperatureTransition
 import com.mollin.yapi.utils.YeelightUtils
-import kotlinx.coroutines.*
-import java.util.*
-
+import com.richardswesterhof.wakelightcompanion.implementation_details.Config
+import com.richardswesterhof.wakelightcompanion.implementation_details.IWakeLightDevice
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Arrays
 
 private val maxColorTemp = 6500
 private val minColorTemp = 1700
-
 
 /**
  * the methods in this file will actually send the request to the Yeelight bulb
  * at the given IP, with the option to give a port as well
  */
-class YeelightWrapper: ViewModel() {
+class YeelightDevice: ViewModel(), IWakeLightDevice<YeelightDevice> {
 
     private lateinit var sharedPrefs: SharedPreferences
 
@@ -40,6 +40,7 @@ class YeelightWrapper: ViewModel() {
 
 
     fun startWakeLight(context: Context, ip: String, port: Int?) {
+        // TODO: deprecate this method in favor of the one from IWakeLightDevice
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         initVars()
@@ -63,9 +64,15 @@ class YeelightWrapper: ViewModel() {
         duration1 = duration1Minutes * 60 * 1000
 //        val duration2: Int = duration2Minutes * 60 * 1000
 
-        startingColorTemp = clampStringPref("pref_wakelight_start_color_temp", 1700, minColorTemp, maxColorTemp)
+        startingColorTemp = clampStringPref("pref_wakelight_start_color_temp", 1700,
+            minColorTemp,
+            maxColorTemp
+        )
 //        val midColorTemp = clampStringPref("pref_wakelight_mid_color_temp", 2000, minColorTemp, maxColorTemp)
-        endingColorTemp = clampStringPref("pref_wakelight_end_color_temp", 5000, minColorTemp, maxColorTemp)
+        endingColorTemp = clampStringPref("pref_wakelight_end_color_temp", 5000,
+            minColorTemp,
+            maxColorTemp
+        )
         val startingBrightness = clampIntPref("pref_wakelight_start_brightness", 1, 0, 100)
 //        val midBrightness = clampIntPref("pref_wakelight_mid_brightness", 50, 0, 100)
         endingBrightness = clampIntPref("pref_wakelight_end_brightness", 100, 0, 100)
@@ -96,7 +103,11 @@ class YeelightWrapper: ViewModel() {
     }
 
     fun clampStringPref(pref: String, default: Int, min: Int, max: Int): Int {
-        return YeelightUtils.clamp(sharedPrefs.getString(pref, default.toString())!!.toInt(), min, max)
+        return YeelightUtils.clamp(
+            sharedPrefs.getString(pref, default.toString())!!.toInt(),
+            min,
+            max
+        )
     }
 
     fun clampIntPref(pref: String, default: Int, min: Int, max: Int): Int {
@@ -104,6 +115,7 @@ class YeelightWrapper: ViewModel() {
     }
 
     fun stopWakeLight(ip: String, port: Int?) {
+        // TODO: deprecate this method in favor of the one from IWakeLightDevice
         // create a new coroutine to move the execution off the UI thread
         viewModelScope.launch(Dispatchers.IO) {
             val device = port?.let { YeelightDevice(ip, port) } ?: YeelightDevice(ip)
@@ -111,5 +123,13 @@ class YeelightWrapper: ViewModel() {
             device.stopFlow()
             Log.d("stopWakeLight", "sent request to wakelight")
         }
+    }
+
+    override fun startWakeLight(context: Context, config: Config<YeelightDevice>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun stopWakeLight(context: Context, config: Config<YeelightDevice>) {
+        TODO("Not yet implemented")
     }
 }
