@@ -1,7 +1,7 @@
 package com.richardswesterhof.wakelightcompanion.settings_page
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.richardswesterhof.wakelightcompanion.R
 
 class SettingsActivity : AppCompatActivity() {

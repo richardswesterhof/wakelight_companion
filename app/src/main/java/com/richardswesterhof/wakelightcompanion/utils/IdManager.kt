@@ -14,7 +14,10 @@ class IdManager {
          * so calling this method is all that is necessary
          */
         fun getNextNotifId(context: Context): Int {
-            val sharedPref: SharedPreferences = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
+            val sharedPref: SharedPreferences = context.getSharedPreferences(
+                context.resources.getString(R.string.preference_file_store_internal_vars),
+                Context.MODE_PRIVATE
+            )
             val retVal = peekNextNotifId(context)
             with(sharedPref.edit()) {
                 putInt(notifIdPrefName, retVal + 1)
@@ -32,7 +35,10 @@ class IdManager {
          * but at that point, just use getNextNotifId, that function already does that automatically
          */
         private fun peekNextNotifId(context: Context): Int {
-            val sharedPref: SharedPreferences = context.getSharedPreferences(context.resources.getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
+            val sharedPref: SharedPreferences = context.getSharedPreferences(
+                context.resources.getString(R.string.preference_file_store_internal_vars),
+                Context.MODE_PRIVATE
+            )
             return sharedPref.getInt(notifIdPrefName, 0)
         }
     }

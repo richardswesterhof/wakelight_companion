@@ -10,13 +10,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.R
-import com.richardswesterhof.wakelightcompanion.implementation_details.yeelight.YeelightDevice
+import com.richardswesterhof.wakelightcompanion.devices.yeelight.YeelightImpl
 import com.richardswesterhof.wakelightcompanion.utils.IdManager
 
-private val starterListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
-private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
+private val starterListeningFors: List<String> =
+    listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
+private val stopperListeningFors: List<String> =
+    listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
 
-class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
+class WakeLightStarter : ExtendedBroadcastReceiver(starterListeningFors) {
 
     private lateinit var notificationChannel: String
     private lateinit var settings: SharedPreferences
@@ -30,7 +32,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         // check if alarm still exists
         val au = AlarmUtil(context)
         val am = au.am
-        if(am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
+        if (am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
             sendDisableNotif(context)
@@ -43,8 +45,9 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
         val portInt = port.toIntOrNull()
-        val yeelight = YeelightDevice()
-        if(port.isNotBlank() && portInt != null) yeelight.startWakeLight(context, ip, portInt)
+        // TODO: get proper implementation for the device and create its corresponding config
+        val yeelight = YeelightImpl()
+        if (port.isNotBlank() && portInt != null) yeelight.startWakeLight(context, ip, portInt)
         else yeelight.startWakeLight(context, ip, null)
 
     }
@@ -54,7 +57,12 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
             action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
         }
-        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            context,
+            1,
+            stopWakeLightIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val nextNotificationId = IdManager.getNextNotifId(context)
 
@@ -71,12 +79,12 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
             // Google: notificationId is a unique int for each notification that you must define
             // Me: haha hardcoded 2 go brrrrrr
             notify(nextNotificationId, builder.build())
-            Log.d(this::class.simpleName,"Sent the notification")
+            Log.d(this::class.simpleName, "Sent the notification")
         }
     }
 }
 
-class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
+class WakeLightStopper : ExtendedBroadcastReceiver(stopperListeningFors) {
 
     private lateinit var settings: SharedPreferences
 
@@ -93,8 +101,8 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
         val port = settings.getString("pref_wakelight_port", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
         val portInt = port.toIntOrNull()
-        val yeelight = YeelightDevice()
-        if(port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
+        val yeelight = YeelightImpl()
+        if (port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
         else yeelight.stopWakeLight(ip, null)
     }
 }
