@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 
-abstract class ExtendedBroadcastReceiver(listeningFors: List<String>): BroadcastReceiver() {
+abstract class ExtendedBroadcastReceiver(listeningFors: List<String>) : BroadcastReceiver() {
 
-    val ACTIONS_LISTENING_FOR: List<String> = listeningFors
+    private val ACTIONS_LISTENING_FOR: List<String> = listeningFors
 
     override fun onReceive(context: Context, intent: Intent) {
         val receivedAction: String? = intent.action
-        if(!ACTIONS_LISTENING_FOR.contains(receivedAction)) {
+        if (!ACTIONS_LISTENING_FOR.contains(receivedAction)) {
             Log.e(this::class.simpleName, "Bad action: $receivedAction")
             return
         }

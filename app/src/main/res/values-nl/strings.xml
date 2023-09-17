@@ -1,19 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- hackeroonies that allow us to reuse certain strings in XML -->
-<!DOCTYPE resources [
-    <!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion.">
-    <!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm">
-    <!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">
-    <!ENTITY interval_day_every "Everyday">
-    <!ENTITY interval_hour_whole_day "WholeDay">
-    ] >
+<?xml version="1.0" encoding="utf-8"?><!-- hackeroonies that allow us to reuse certain strings in XML -->
+<!DOCTYPE resources [<!ENTITY package_prefix "com.richardswesterhof.wakelightcompanion."><!ENTITY schedule_interval_format "EEEE HH:mm - HH:mm"><!ENTITY interval_format_help_url "https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html"><!ENTITY interval_day_every "Everyday"><!ENTITY interval_hour_whole_day "WholeDay">] >
 
 <resources>
     <string name="app_name">WakeLight Companion</string>
     <string name="loading">Laden…</string>
     <string name="next_alarm_scheduled">Volgende WakeLight Alarm is gezet voor:</string>
     <string name="notif_cat_enable_name">WakeLight Inschakel Optie</string>
-    <string name="notif_cat_enable_desc">Notificaties die vragen of het Wakelight alarm ingeschakeld moet worden</string>
+    <string name="notif_cat_enable_desc">Notificaties die vragen of het WakeLight alarm ingeschakeld moet worden</string>
     <string name="notif_cat_stop_name">WakeLight stop knop</string>
     <string name="notif_cat_stop_desc">Notificaties die het WakeLight kunnen stoppen</string>
     <string name="notif_cat_warning_name">Waarschuwingen</string>
@@ -41,4 +34,5 @@
     <string name="pref_cat_schedule">Schema</string>
     <string name="settings">Instellingen</string>
     <string name="home">Thuis</string>
+    <string name="pref_cat_devices">Lichten</string>
 </resources>

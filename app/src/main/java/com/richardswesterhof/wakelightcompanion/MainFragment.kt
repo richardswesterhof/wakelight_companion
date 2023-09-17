@@ -10,14 +10,18 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.broadcast_receivers.WakeLightStopper
-import java.util.*
+import java.util.Date
 
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
 
     private var dateMillis: Long = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
@@ -69,5 +73,4 @@ class MainFragment: Fragment() {
                 }
             }
     }
-
 }

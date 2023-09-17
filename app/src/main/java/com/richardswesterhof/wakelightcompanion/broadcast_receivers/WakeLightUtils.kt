@@ -10,13 +10,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.R
-import com.richardswesterhof.wakelightcompanion.implementation_details.*
+import com.richardswesterhof.wakelightcompanion.devices.yeelight.YeelightImpl
 import com.richardswesterhof.wakelightcompanion.utils.IdManager
 
-private val starterListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
-private val stopperListeningFors: List<String> = listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
+private val starterListeningFors: List<String> =
+    listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
+private val stopperListeningFors: List<String> =
+    listOf("com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM")
 
-class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
+class WakeLightStarter : ExtendedBroadcastReceiver(starterListeningFors) {
 
     private lateinit var notificationChannel: String
     private lateinit var settings: SharedPreferences
@@ -30,20 +32,24 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
         // check if alarm still exists
         val au = AlarmUtil(context)
         val am = au.am
-        if(am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
+        if (am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
 //            sendDisableNotif(context)
-            startWakelight(context)
+            startWakeLight(context)
         }
     }
 
-    fun startWakelight(context: Context) {
+    fun startWakeLight(context: Context) {
         val prefID = settings.getString("pref_wakelight_id", "")!!
 
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
-        val yeelight = YeelightWrapper()
-        yeelight.startWakeLight(context, prefID)
+        // TODO: get proper implementation for the device and create its corresponding config
+        val device = YeelightImpl()
+        // TODO: commented for testing purposes
+
+
+//        device.startWakeLight(context, prefID)
     }
 
 
@@ -72,7 +78,7 @@ class WakeLightStarter: ExtendedBroadcastReceiver(starterListeningFors) {
 //    }
 }
 
-class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
+class WakeLightStopper : ExtendedBroadcastReceiver(stopperListeningFors) {
 
     private lateinit var settings: SharedPreferences
 
@@ -85,7 +91,8 @@ class WakeLightStopper: ExtendedBroadcastReceiver(stopperListeningFors) {
     fun stopWakeLight(context: Context) {
         val prefID = settings.getString("pref_wakelight_id", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
-        val yeelight = YeelightWrapper()
-        yeelight.stopWakeLight(context, prefID)
+        val yeelight = YeelightImpl()
+        // TODO: commented for testing purposes
+//        yeelight.stopWakeLight(context, prefID)
     }
 }

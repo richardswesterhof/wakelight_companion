@@ -2,7 +2,7 @@ package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
 import android.app.AlarmManager
 import android.content.Context
-import java.util.*
+import java.util.Date
 
 class AlarmUtil(context: Context) {
 
@@ -19,5 +19,4 @@ class AlarmUtil(context: Context) {
     fun getAlarmManager(): AlarmManager {
         return am
     }
-
 }

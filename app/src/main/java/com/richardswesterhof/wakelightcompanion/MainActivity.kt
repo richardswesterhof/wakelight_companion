@@ -1,13 +1,14 @@
 package com.richardswesterhof.wakelightcompanion
 
-import android.app.*
-import androidx.fragment.app.Fragment
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mollin.yapi.YeelightDiscoveryManager
@@ -17,23 +18,22 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPrefs: SharedPreferences
 
     private var navListener = BottomNavigationView.OnNavigationItemSelectedListener {
         val nextAlarmMillis = sharedPrefs.getLong("nextAlarmMillis", 0)
-        val selectedFragment: Fragment? = when(it.itemId) {
+        val selectedFragment: Fragment? = when (it.itemId) {
             R.id.nav_home -> MainFragment.newInstance(nextAlarmMillis)
             R.id.nav_settings -> SettingsFragment.newInstance()
             else -> null
         }
 
-        if(selectedFragment == null) {
+        if (selectedFragment == null) {
             Log.e(this::class.simpleName, "Cannot navigate to: \"${it.itemId}\": unknown id")
             false
-        }
-        else {
+        } else {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, selectedFragment)
@@ -49,7 +49,10 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_store_internal_vars), Context.MODE_PRIVATE)
+        sharedPrefs = this.getSharedPreferences(
+            getString(R.string.preference_file_store_internal_vars),
+            Context.MODE_PRIVATE
+        )
         setPreferencesToDefaultIfUndefined()
 
         createNotificationChannels()
