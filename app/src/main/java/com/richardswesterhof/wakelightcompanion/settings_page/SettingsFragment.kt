@@ -3,8 +3,13 @@ package com.richardswesterhof.wakelightcompanion.settings_page
 import android.os.Bundle
 import android.text.InputType
 import androidx.preference.EditTextPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.richardswesterhof.wakelightcompanion.R
+import com.richardswesterhof.wakelightcompanion.settings_page.custom_prefences.DevicePreference
+import com.richardswesterhof.wakelightcompanion.settings_page.custom_prefences.DevicePreferenceDialog
+import java.util.UUID
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -50,8 +55,35 @@ class SettingsFragment : PreferenceFragmentCompat() {
         editTextPreferencePort?.setOnBindEditTextListener { editText ->
             editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
         }
+
+        val addDevicePreference =
+            preferenceManager.findPreference<Preference>("pref_add_device_button")
+        addDevicePreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            addDevice()
+            true
+        }
     }
 
+    fun addDevice(): String {
+        val uuid = UUID.randomUUID().toString()
+        val deviceCategory =
+            preferenceManager.findPreference("pref_cat_devices") as PreferenceCategory?
+        val pref = DevicePreference(this.context)
+        pref.title = uuid
+        pref.key = "testing yes yes"
+        deviceCategory?.addPreference(pref)
+        return uuid
+    }
+
+    override fun onDisplayPreferenceDialog(preference: Preference?) {
+        if (preference is DevicePreference) {
+            val fragment = DevicePreferenceDialog(preference);
+            fragment.setTargetFragment(this, 0);
+            fragment.show(parentFragmentManager, "TODO: testing for now");
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
+    }
 
     companion object {
         @JvmStatic

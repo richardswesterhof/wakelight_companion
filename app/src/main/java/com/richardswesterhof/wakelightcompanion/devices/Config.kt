@@ -11,6 +11,10 @@ abstract class Config(private val sharedPrefs: SharedPreferences) {
         this.cachedValues = HashMap()
     }
 
+    fun getId(): String? {
+        return getString("id", null)
+    }
+
     fun <T : Int?> getInt(key: String, default: T): T {
         return cachedValues.getOrPut(key) {
             if (sharedPrefs.contains(key))

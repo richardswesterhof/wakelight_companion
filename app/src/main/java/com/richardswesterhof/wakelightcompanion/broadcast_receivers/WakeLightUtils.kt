@@ -46,9 +46,10 @@ class WakeLightStarter : ExtendedBroadcastReceiver(starterListeningFors) {
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
         val portInt = port.toIntOrNull()
         // TODO: get proper implementation for the device and create its corresponding config
-        val yeelight = YeelightImpl()
-        if (port.isNotBlank() && portInt != null) yeelight.startWakeLight(context, ip, portInt)
-        else yeelight.startWakeLight(context, ip, null)
+        val device = YeelightImpl()
+        // TODO: commented for testing purposes
+//        if (port.isNotBlank() && portInt != null) device.startWakeLight(context, ip, portInt)
+//        else device.startWakeLight(context, ip, null)
 
     }
 
@@ -102,7 +103,8 @@ class WakeLightStopper : ExtendedBroadcastReceiver(stopperListeningFors) {
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
         val portInt = port.toIntOrNull()
         val yeelight = YeelightImpl()
-        if (port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
-        else yeelight.stopWakeLight(ip, null)
+        // TODO: commented for testing purposes
+//        if (port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
+//        else yeelight.stopWakeLight(ip, null)
     }
 }
