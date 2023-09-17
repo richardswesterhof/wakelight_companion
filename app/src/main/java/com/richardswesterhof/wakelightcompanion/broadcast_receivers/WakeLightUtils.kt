@@ -35,54 +35,47 @@ class WakeLightStarter : ExtendedBroadcastReceiver(starterListeningFors) {
         if (am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
-            sendDisableNotif(context)
+//            sendDisableNotif(context)
             startWakeLight(context)
         }
     }
 
     fun startWakeLight(context: Context) {
-        val ip = settings.getString("pref_wakelight_ip", "")!!
-        val port = settings.getString("pref_wakelight_port", "")!!
+        val prefID = settings.getString("pref_wakelight_id", "")!!
+
         Log.d(this::class.simpleName, "Calling start wakelight on the implementation")
-        val portInt = port.toIntOrNull()
         // TODO: get proper implementation for the device and create its corresponding config
         val device = YeelightImpl()
         // TODO: commented for testing purposes
-//        if (port.isNotBlank() && portInt != null) device.startWakeLight(context, ip, portInt)
-//        else device.startWakeLight(context, ip, null)
 
+
+//        device.startWakeLight(context, prefID)
     }
 
-    fun sendDisableNotif(context: Context) {
-        // the intent that we will use for the click action on the notification itself
-        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
-            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
-        }
-        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(
-            context,
-            1,
-            stopWakeLightIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
-        val nextNotificationId = IdManager.getNextNotifId(context)
-
-        val builder = NotificationCompat.Builder(context, notificationChannel)
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setSmallIcon(R.drawable.lightbulb)
-            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
-            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
-            .setColor(context.getColor(R.color.navy_blue_light))
-            .setContentIntent(stopPendingIntent)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(context)) {
-            // Google: notificationId is a unique int for each notification that you must define
-            // Me: haha hardcoded 2 go brrrrrr
-            notify(nextNotificationId, builder.build())
-            Log.d(this::class.simpleName, "Sent the notification")
-        }
-    }
+//    fun sendDisableNotif(context: Context) {
+//        // the intent that we will use for the click action on the notification itself
+//        val stopWakeLightIntent = Intent(context, WakeLightStopper::class.java).apply {
+//            action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
+//        }
+//        val stopPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1, stopWakeLightIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+//
+//        val nextNotificationId = IdManager.getNextNotifId(context)
+//
+//        val builder = NotificationCompat.Builder(context, notificationChannel)
+//            .setDefaults(Notification.DEFAULT_ALL)
+//            .setSmallIcon(R.drawable.lightbulb)
+//            .setContentTitle(context.getString(R.string.notif_ask_stop_wakelight_title))
+//            .setContentText(context.getString(R.string.notif_ask_stop_wakelight_content))
+//            .setColor(context.getColor(R.color.navy_blue_light))
+//            .setContentIntent(stopPendingIntent)
+//            .setAutoCancel(true)
+//
+//        with(NotificationManagerCompat.from(context)) {
+//            notify(nextNotificationId, builder.build())
+//            Log.d(this::class.simpleName,"Sent the notification")
+//        }
+//    }
 }
 
 class WakeLightStopper : ExtendedBroadcastReceiver(stopperListeningFors) {
@@ -91,20 +84,15 @@ class WakeLightStopper : ExtendedBroadcastReceiver(stopperListeningFors) {
 
     override fun trigger(context: Context, intent: Intent) {
         Log.d(this::class.simpleName, "Received request to stop wakelight")
-
         settings = PreferenceManager.getDefaultSharedPreferences(context)
-
-        stopWakeLight()
+        stopWakeLight(context)
     }
 
-    fun stopWakeLight() {
-        val ip = settings.getString("pref_wakelight_ip", "")!!
-        val port = settings.getString("pref_wakelight_port", "")!!
+    fun stopWakeLight(context: Context) {
+        val prefID = settings.getString("pref_wakelight_id", "")!!
         Log.d(this::class.simpleName, "Calling stop wakelight on the implementation")
-        val portInt = port.toIntOrNull()
         val yeelight = YeelightImpl()
         // TODO: commented for testing purposes
-//        if (port.isNotBlank() && portInt != null) yeelight.stopWakeLight(ip, portInt)
-//        else yeelight.stopWakeLight(ip, null)
+//        yeelight.stopWakeLight(context, prefID)
     }
 }

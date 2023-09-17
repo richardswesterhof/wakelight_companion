@@ -8,6 +8,9 @@ private const val COLOR_TEMP_MAX = 6500
 
 class YeelightConfig(sharedPrefs: SharedPreferences) : Config(sharedPrefs) {
 
+    fun getYeelightId(): String? {
+        return getString("pref_wakelight_id", null)
+    }
 
     fun getIp(): String {
         return getString("pref_wakelight_ip", "")

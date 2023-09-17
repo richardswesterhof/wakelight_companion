@@ -23,12 +23,12 @@ private val listeningFors: List<String> = listOf("android.app.action.NEXT_ALARM_
 
 class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
 
-    private lateinit var internalPref: SharedPreferences
-    private lateinit var settings: SharedPreferences
+    private lateinit var internalPref: SharedPreferences // used to persistently store data internal to the functioning of the app
+    private lateinit var settings: SharedPreferences // used to store user's settings
 
     override fun trigger(context: Context, intent: Intent) {
         val date: Date? = AlarmUtil(context).getNextAlarmDate()
-        Log.d(this::class.simpleName, "next alarm date is set to be $date")
+        Log.d(this::class.simpleName, "Next alarm date is set to be $date")
 
         internalPref = context.getSharedPreferences(
             context.resources.getString(R.string.preference_file_store_internal_vars),
@@ -36,11 +36,16 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         )
         settings = PreferenceManager.getDefaultSharedPreferences(context)
 
-        // always try to stop current wakelight
-        stopWakeLight(context)
+        if(date == Date(internalPref.getLong("lastReceivedAlarmMillis", 0))) {
+            Log.d(this::class.simpleName,"Skipping alarm at $date because it has already been received before")
+            return
+        }
 
         if (date == null) removeFromStorage()
-        else askEnable(context, date)
+        else {
+            askEnable(context, date)
+            storeLastReceivedAlarm(date)
+        }
     }
 
 
@@ -183,6 +188,13 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
     private fun removeFromStorage() {
         with(internalPref.edit()) {
             putLong("nextAlarmMillis", 0)
+            apply()
+        }
+    }
+
+    private fun storeLastReceivedAlarm(date: Date) {
+        with(internalPref.edit()) {
+            putLong("lastReceivedAlarmMillis", date.time)
             apply()
         }
     }

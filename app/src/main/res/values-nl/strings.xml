@@ -9,6 +9,8 @@
     <string name="notif_cat_enable_desc">Notificaties die vragen of het WakeLight alarm ingeschakeld moet worden</string>
     <string name="notif_cat_stop_name">WakeLight stop knop</string>
     <string name="notif_cat_stop_desc">Notificaties die het WakeLight kunnen stoppen</string>
+    <string name="notif_cat_warning_name">Waarschuwingen</string>
+    <string name="notif_cat_warning_desc">Notificaties die laten weten wanneer er iets niet goed is gegaan.</string>
     <string name="notif_ask_enable_wakelight_title">Nieuw alarm gedetecteerd voor %1$s</string>
     <string name="notif_ask_enable_wakelight_confirm_button">Inschakelen</string>
     <string name="notif_ask_stop_wakelight_title">WakeLight actief</string>

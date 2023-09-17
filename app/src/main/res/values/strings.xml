@@ -8,6 +8,7 @@
     <string name="settings">Settings</string>
     <string name="home">Home</string>
     <string name="preference_file_store_internal_vars" translatable="false">&package_prefix;internal_vars</string>
+    <string name="null_placeholder" translatable="false">NULL</string>
 
     <!--
         wrappers around the entity resources defined at the top of this file,
@@ -32,6 +33,11 @@
     <string name="notif_cat_stop_desc">Notifications that let you stop the WakeLight when it is going off.</string>
     <string name="notif_cat_stop_id" translatable="false">&package_prefix;wakelight_stop</string>
 
+    <!-- wakelight warnings -->
+    <string name="notif_cat_warning_name">Warnings</string>
+    <string name="notif_cat_warning_desc">Notifications that let you know when something did not go according to plan.</string>
+    <string name="notif_cat_warning_id" translatable="false">&package_prefix;warnings</string>
+
     <!-- individual notifications -->
     <!-- ask enable -->
     <string name="notif_ask_enable_wakelight_title">New alarm detected for %1$s</string>
@@ -39,7 +45,10 @@
     <string name="notif_ask_enable_wakelight_confirm_button">Enable</string>
     <!-- button stop -->
     <string name="notif_ask_stop_wakelight_title">WakeLight active</string>
-    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm</string>
+    <string name="notif_ask_stop_wakelight_content">Tap to dismiss WakeLight alarm (id %1$s)</string>
+    <!-- device not found-->
+    <string name="notif_device_not_found_title">Device not found</string>
+    <string name="notif_device_not_found_content">The device you selected (%1$s) was not found on the network</string>
 
 
     <!-- setting names and descriptions -->
@@ -60,6 +69,8 @@
 
     <string name="pref_wakelight_ip_title">WakeLight IP</string>
     <string name="pref_wakelight_ip_desc">The IP address of the WakeLight. If your router allows it, the hostname will work too</string>
+    <string name="pref_wakelight_id_title">WakeLight ID</string>
+    <string name="pref_wakelight_id_desc">The ID of the WakeLight. Since IP addresses may change, you can select the ID of your device and the IP will be looked up when necessary</string>
     <string name="pref_wakelight_port_title">WakeLight Port</string>
     <string name="pref_wakelight_port_desc">The port to send commands to at the given IP. Leave blank for default</string>
     <string name="pref_wakelight_schedule_title">Auto Enable Schedule</string>

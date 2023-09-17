@@ -74,25 +74,37 @@
             android:icon="@drawable/brightness" />
     </PreferenceCategory>
 
+<!--    <PreferenceCategory android:title="@string/pref_cat_networking">-->
+        <!-- TODO: maybe make it an option to choose between specific ip and port or id-->
+<!--        <EditTextPreference-->
+<!--            android:defaultValue=""-->
+<!--            android:icon="@drawable/location"-->
+<!--            android:key="pref_wakelight_ip"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:summary="@string/pref_wakelight_ip_desc"-->
+<!--            android:title="@string/pref_wakelight_ip_title" />-->
+
     <!-- Category below is to be deprecated and replaced by the "devices" category -->
     <PreferenceCategory android:title="@string/pref_cat_networking" android:key="pref_cat_networking">
-        <EditTextPreference
+        <ListPreference
             android:defaultValue=""
             android:icon="@drawable/location"
-            android:key="pref_wakelight_ip"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_wakelight_ip_desc"
-            android:title="@string/pref_wakelight_ip_title" />
+            android:key="pref_wakelight_id"
+            android:summary="@string/pref_wakelight_id_desc"
+            android:title="@string/pref_wakelight_id_title" />
+<!--            android:entries="@string/loading"-->
+<!--            android:entryValues="@string/null_placeholder"-->
+<!--        />-->
 
-        <EditTextPreference
-            android:defaultValue=""
-            android:icon="@drawable/cable"
-            android:key="pref_wakelight_port"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/pref_wakelight_port_desc"
-            android:title="@string/pref_wakelight_port_title" />
+<!--        <EditTextPreference-->
+<!--            android:defaultValue=""-->
+<!--            android:icon="@drawable/cable"-->
+<!--            android:key="pref_wakelight_port"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:summary="@string/pref_wakelight_port_desc"-->
+<!--            android:title="@string/pref_wakelight_port_title" />-->
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_devices" android:key="pref_cat_devices">

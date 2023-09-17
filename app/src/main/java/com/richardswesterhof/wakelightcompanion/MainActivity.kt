@@ -6,11 +6,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mollin.yapi.YeelightDiscoveryManager
 import com.richardswesterhof.wakelightcompanion.settings_page.SettingsFragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
+
 
     }
 
@@ -77,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         val stopNotifCat = getString(R.string.notif_cat_stop_name)
         val stopNotifDesc = getString(R.string.notif_cat_stop_desc)
 
+        val warningNotifCat = getString(R.string.notif_cat_warning_name)
+        val wanringNotifDesc = getString(R.string.notif_cat_warning_desc)
+
         createNotificationChannel(
             enableNotifCat, enableNotifDesc, NotificationManager.IMPORTANCE_HIGH, getString(
                 R.string.notif_cat_enable_id
@@ -85,6 +94,11 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel(
             stopNotifCat, stopNotifDesc, NotificationManager.IMPORTANCE_LOW, getString(
                 R.string.notif_cat_stop_id
+            )
+        )
+        createNotificationChannel(
+            warningNotifCat, wanringNotifDesc, NotificationManager.IMPORTANCE_HIGH, getString(
+                R.string.notif_cat_warning_id
             )
         )
     }
