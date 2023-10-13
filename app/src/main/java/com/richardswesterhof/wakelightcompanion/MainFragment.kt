@@ -11,6 +11,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.broadcast_receivers.WakeLightStopper
+import com.richardswesterhof.wakelightcompanion.devices.tuya.TuyaApiHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.Date
 
 
@@ -42,17 +46,18 @@ class MainFragment : Fragment() {
 
         val magicButton = view.findViewById(R.id.test_button) as Button
         magicButton.setOnClickListener {
-            val command = "navigate to the nearest grocery store"
-            val intent = Intent(Intent.ACTION_WEB_SEARCH)
-            intent.setClassName(
-                "com.google.android.googlequicksearchbox",
-                "com.google.android.googlequicksearchbox.SearchActivity"
-            )
-            intent.putExtra("query", command)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK //necessary if launching from Service
-
-            context?.startActivity(intent)
-            Log.d("testing", "yuuuuuuupppppppp")
+            GlobalScope.launch(Dispatchers.IO) {
+                val tuyaApiHandler = TuyaApiHandler()
+                Log.d(
+                    "testing",
+                    tuyaApiHandler.execute(
+                        tuyaApiHandler.getTokenPath,
+                        "GET",
+                        "",
+                        HashMap()
+                    ).body?.string() ?: "<no response body>"
+                )
+            }
         }
     }
 
