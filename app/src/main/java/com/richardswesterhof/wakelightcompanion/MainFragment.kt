@@ -2,6 +2,7 @@ package com.richardswesterhof.wakelightcompanion
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,21 @@ class MainFragment : Fragment() {
 
         val button = view.findViewById(R.id.cancel_next_alarm_button) as Button
         button.setOnClickListener { cancelNextWakeLight(view) }
+
+        val magicButton = view.findViewById(R.id.test_button) as Button
+        magicButton.setOnClickListener {
+            val command = "navigate to the nearest grocery store"
+            val intent = Intent(Intent.ACTION_WEB_SEARCH)
+            intent.setClassName(
+                "com.google.android.googlequicksearchbox",
+                "com.google.android.googlequicksearchbox.SearchActivity"
+            )
+            intent.putExtra("query", command)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK //necessary if launching from Service
+
+            context?.startActivity(intent)
+            Log.d("testing", "yuuuuuuupppppppp")
+        }
     }
 
 
