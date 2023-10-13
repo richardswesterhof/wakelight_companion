@@ -20,6 +20,7 @@
     <string name="interval_format_help_url" translatable="false">&interval_format_help_url;</string>
 
     <string name="next_alarm_scheduled">Next WakeLight Alarm is scheduled for: </string>
+    <string name="perform_magic">Perform Magic</string>
 
     <!-- notifications -->
     <!-- categories -->

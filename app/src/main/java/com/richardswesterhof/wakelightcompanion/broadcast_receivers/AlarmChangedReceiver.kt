@@ -36,8 +36,11 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
         )
         settings = PreferenceManager.getDefaultSharedPreferences(context)
 
-        if(date == Date(internalPref.getLong("lastReceivedAlarmMillis", 0))) {
-            Log.d(this::class.simpleName,"Skipping alarm at $date because it has already been received before")
+        if (date == Date(internalPref.getLong("lastReceivedAlarmMillis", 0))) {
+            Log.d(
+                this::class.simpleName,
+                "Skipping alarm at $date because it has already been received before"
+            )
             return
         }
 
@@ -135,15 +138,15 @@ class AlarmChangedReceiver : ExtendedBroadcastReceiver(listeningFors) {
                     "$date matches interval \"$trimmedInterval\" (based on regex)"
                 )
                 val (intervalDay, hourLow, minuteLow, hourHigh, minuteHigh, wholeDay) = match.destructured
-                val alarmDay = localDate.dayOfWeek.toString().toLowerCase(Locale.ROOT)
-                if (intervalDay.equals(alarmDay, ignoreCase = true) || intervalDay.toLowerCase(
+                val alarmDay = localDate.dayOfWeek.toString().lowercase(Locale.ROOT)
+                if (intervalDay.equals(alarmDay, ignoreCase = true) || intervalDay.lowercase(
                         Locale.ROOT
                     ) == "everyday"
                 ) {
                     val hour = localDate.hour
                     val minute = localDate.minute
                     // if the whole day is specified
-                    if (wholeDay.toLowerCase(Locale.ROOT) == "wholeday" ||
+                    if (wholeDay.lowercase(Locale.ROOT) == "wholeday" ||
                         // if the hour is truly in between the low and high hours of the interval
                         (hourLow.toInt() < hour && hourHigh.toInt() > hour) ||
                         // if the hour is equal to the low we need to compare the minutes
