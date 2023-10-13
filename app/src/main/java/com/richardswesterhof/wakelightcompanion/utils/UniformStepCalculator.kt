@@ -1,41 +1,36 @@
 package com.richardswesterhof.wakelightcompanion.utils
 
 class UniformStepCalculator(
-        private val steps: Double,
-        private val minBright: Double,
-        private val maxBright: Double,
-        private val minTemp: Double,
-        private val maxTemp: Double,
-        private val minDuration: Double,
-        private val maxDuration: Double
+    steps: Double,
+    minBright: Double,
+    maxBright: Double,
+    minTemp: Double,
+    maxTemp: Double,
+    minDuration: Double,
+    maxDuration: Double
 ) {
 
-    private lateinit var brightnessFunction: LinearFunction
-    private lateinit var temperatureFunction: LinearFunction
-    private lateinit var durationFunction: LinearFunction
-
-    init {
-        brightnessFunction =
-                LinearFunction.givenPoints(Pair(0.0, minBright), Pair(steps, maxBright))
-        temperatureFunction = LinearFunction.givenPoints(Pair(0.0, minTemp), Pair(steps, maxTemp))
-        durationFunction =
-                LinearFunction.givenPoints(Pair(0.0, minDuration), Pair(steps, maxDuration))
-    }
+    private var brightnessFunction: LinearFunction =
+        LinearFunction.givenPoints(Pair(0.0, minBright), Pair(steps, maxBright))
+    private var temperatureFunction: LinearFunction =
+        LinearFunction.givenPoints(Pair(0.0, minTemp), Pair(steps, maxTemp))
+    private var durationFunction: LinearFunction =
+        LinearFunction.givenPoints(Pair(0.0, minDuration), Pair(steps, maxDuration))
 
     class LinearFunction(val a: Double, val b: Double) {
-        public fun evaluate(x: Double): Double {
+        fun evaluate(x: Double): Double {
             return a * x + b
         }
 
-        override public fun toString(): String {
+        override fun toString(): String {
             return "$a x + $b"
         }
 
         companion object {
             @JvmStatic
-            public fun givenPoints(
-                    p1: Pair<Double, Double>,
-                    p2: Pair<Double, Double>
+            fun givenPoints(
+                p1: Pair<Double, Double>,
+                p2: Pair<Double, Double>
             ): LinearFunction {
                 val slope = (p2.second - p1.second) / (p2.first - p1.first)
                 val offset = p1.second - slope * p1.first
@@ -44,9 +39,21 @@ class UniformStepCalculator(
         }
     }
 
+    fun calcBrightness(step: Int): Double {
+        return brightnessFunction.evaluate(step.toDouble())
+    }
+
+    fun calcTemperature(step: Int): Double {
+        return temperatureFunction.evaluate(step.toDouble())
+    }
+
+    fun calcDuration(step: Int): Double {
+        return durationFunction.evaluate(step.toDouble())
+    }
+
     companion object {
         @JvmStatic
-        public fun main(args: Array<String>) {
+        fun main(args: Array<String>) {
             println(LinearFunction.givenPoints(Pair(0.0, 0.0), Pair(2.0, 1.0)))
         }
     }
