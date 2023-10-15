@@ -1,6 +1,7 @@
 package com.richardswesterhof.wakelightcompanion.devices.tuya
 
 
+import android.util.Log
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -25,49 +26,31 @@ import javax.crypto.Mac
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-//import javax.xml.bind.annotation.adapters.HexBinaryAdapter
-
 /**
  * based on original code by:
  * gongtai.yin
  * 2021/08/18
  */
-class TuyaApiHandler {
+class TuyaHttpHandler() {
     // Access ID
-    private val accessId = "9muuqqs85c8y4aguj5jn"
+    private val accessId = "TODO" // TODO: retrieve from *somewhere*
 
     // Access Secret
-    private val accessKey = "6b43db10cabe410081f79d66b7fdee4f"
-
-    // Tuya central europe cloud endpoint
-    private val endpoint = "https://openapi.tuyaeu.com"
-
-    val getTokenPath = "/v1.0/token?grant_type=1"
+    private val accessKey = "TODO" // TODO: retrieve from *somewhere*
 
     private val CONTENT_TYPE: MediaType? = "application/json".toMediaTypeOrNull()
     private val EMPTY_HASH =
         "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    private val SING_HEADER_NAME = "Signature-Headers"
+    private val SIGN_HEADER_NAME = "Signature-Headers"
     private val NONE_STRING = ""
-//    private val gson: Gson = Gson().newBuilder().create()
+
 
     init {
         // Designated area domain name
-        Constant.CONTAINER[Constant.ENDPOINT] = endpoint
-        Constant.CONTAINER[Constant.ACCESS_ID] = accessId
-        Constant.CONTAINER[Constant.ACCESS_KEY] = accessKey
-    }
+        Constants.CONTAINER[Constants.ENDPOINT] = Constants.ENDPOINT_URL
+        Constants.CONTAINER[Constants.ACCESS_ID] = accessId
+        Constants.CONTAINER[Constants.ACCESS_KEY] = accessKey
 
-    /**
-     * Used to obtain tokens, refresh tokens: no token request
-     */
-    fun execute(
-        path: String,
-        method: String,
-        body: String,
-        customHeaders: Map<String?, String?>
-    ): Response {
-        return execute("", path, method, body, customHeaders)
     }
 
     /**
@@ -75,18 +58,17 @@ class TuyaApiHandler {
      */
     fun execute(
         accessToken: String?,
-        path: String,
+        url: String,
         method: String,
-        body: String,
-        customHeaders: Map<String?, String?>
+        body: String = "",
+        customHeaders: Map<String?, String?> = emptyMap()
     ): Response {
         return try {
             var requestHeaders = customHeaders
             // Verify developer information
-            if (Constant.CONTAINER.isEmpty()) {
+            if (Constants.CONTAINER.isEmpty()) {
                 throw TuyaCloudSDKException("Developer information is not initialized!")
             }
-            val url = Constant.CONTAINER[Constant.ENDPOINT] + path
             val request: Request.Builder = when (method) {
                 "GET" -> getRequest(url)
                 "POST" -> postRequest(url, body)
@@ -99,10 +81,10 @@ class TuyaApiHandler {
             }
             val headers: Headers = getHeader(accessToken, request.build(), body, requestHeaders)
             request.headers(headers)
-            request.url(Constant.CONTAINER[Constant.ENDPOINT] + getPathAndSortParam(url.toHttpUrl()))
+            request.url(Constants.CONTAINER[Constants.ENDPOINT] + getPathAndSortParam(url.toHttpUrl()))
             return doRequest(request.build())
         } catch (e: Exception) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -122,41 +104,45 @@ class TuyaApiHandler {
         headerMap: Map<String?, String?>
     ): Headers {
         val hb: Headers.Builder = Headers.Builder()
-        val flattenHeaders = flattenHeaders(headerMap)
-        var t = flattenHeaders["t"]
+        val flattenedHeaders = flattenHeaders(headerMap)
+        var t = flattenedHeaders["t"]
         if (t.isNullOrBlank()) {
             t = System.currentTimeMillis().toString()
         }
         hb.add(
             "client_id",
-            Constant.CONTAINER[Constant.ACCESS_ID] ?: ""
+            Constants.CONTAINER[Constants.ACCESS_ID] ?: ""
         )
         hb.add("t", t)
         hb.add("sign_method", "HMAC-SHA256")
-        hb.add("lang", "zh")
+        hb.add("lang", "en")
         hb.add(
-            SING_HEADER_NAME,
-            flattenHeaders[SING_HEADER_NAME] ?: ""
+            SIGN_HEADER_NAME,
+            flattenedHeaders[SIGN_HEADER_NAME] ?: ""
         )
-        val nonceStr = flattenHeaders[Constant.NONCE_HEADER_NAME] ?: ""
+        val nonceStr = flattenedHeaders[Constants.NONCE_HEADER_NAME] ?: ""
         hb.add(
-            Constant.NONCE_HEADER_NAME,
-            flattenHeaders[Constant.NONCE_HEADER_NAME] ?: ""
+            Constants.NONCE_HEADER_NAME,
+            flattenedHeaders[Constants.NONCE_HEADER_NAME] ?: ""
         )
-        val stringToSign = stringToSign(request, body, flattenHeaders)
+        val stringToSign = stringToSign(request, body, flattenedHeaders)
         if (accessToken?.isNotBlank() == true) {
             hb.add("access_token", accessToken)
             hb.add(
                 "sign", sign(
-                    Constant.CONTAINER[Constant.ACCESS_ID],
-                    Constant.CONTAINER[Constant.ACCESS_KEY], t, accessToken, nonceStr, stringToSign
+                    Constants.CONTAINER[Constants.ACCESS_ID],
+                    Constants.CONTAINER[Constants.ACCESS_KEY],
+                    t,
+                    accessToken,
+                    nonceStr,
+                    stringToSign
                 )
             )
         } else {
             hb.add(
                 "sign", sign(
-                    Constant.CONTAINER[Constant.ACCESS_ID],
-                    Constant.CONTAINER[Constant.ACCESS_KEY], t, nonceStr, stringToSign
+                    Constants.CONTAINER[Constants.ACCESS_ID],
+                    Constants.CONTAINER[Constants.ACCESS_KEY], t, nonceStr, stringToSign
                 )
             )
         }
@@ -203,7 +189,7 @@ class TuyaApiHandler {
         if ((request.body?.contentLength() ?: 0) > 0) {
             bodyHash = Sha256Util.encryption(body)
         }
-        val signHeaders = headers[SING_HEADER_NAME]
+        val signHeaders = headers[SIGN_HEADER_NAME]
         var headerLine = ""
         if (signHeaders != null) {
             val sighHeaderNames =
@@ -279,7 +265,7 @@ class TuyaApiHandler {
                 .url(url)
                 .get()
         } catch (e: IllegalArgumentException) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -295,7 +281,7 @@ class TuyaApiHandler {
                 .url(url)
                 .post(body.toRequestBody(CONTENT_TYPE))
         } catch (e: IllegalArgumentException) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -311,7 +297,7 @@ class TuyaApiHandler {
                 .url(url)
                 .put(body.toRequestBody(CONTENT_TYPE))
         } catch (e: IllegalArgumentException) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -327,7 +313,7 @@ class TuyaApiHandler {
                 .url(url)
                 .delete(body.toRequestBody(CONTENT_TYPE))
         } catch (e: IllegalArgumentException) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -338,10 +324,11 @@ class TuyaApiHandler {
      * Execute request
      */
     fun doRequest(request: Request): Response {
+        Log.d(this::class.simpleName, "making request $request")
         val response: Response = try {
             httpClient.newCall(request).execute()
         } catch (e: IOException) {
-            val exception = TuyaCloudSDKException(e.message)
+            val exception = TuyaCloudSDKException("${e.javaClass.simpleName} occurred")
             exception.stackTrace = e.stackTrace
             throw exception
         }
@@ -354,7 +341,10 @@ class TuyaApiHandler {
             return OkHttpClient()
         }
 
-    internal object Constant {
+    internal object Constants {
+        // Tuya central europe cloud endpoint
+        const val ENDPOINT_URL = "https://openapi.tuyaeu.com"
+
         /**
          * Store developer information container
          */
@@ -433,18 +423,6 @@ class TuyaApiHandler {
                 "TuyaCloudSDKException: " +
                         "[" + code + "] " + message
             } else "TuyaCloudSDKException: $message"
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val handler = TuyaApiHandler()
-
-
-            val result = handler.execute(handler.getTokenPath, "GET", "", HashMap())
-//            println(gson.toJson(result))
-            println(result)
         }
     }
 }

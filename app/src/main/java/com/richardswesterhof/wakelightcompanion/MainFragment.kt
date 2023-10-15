@@ -2,7 +2,6 @@ package com.richardswesterhof.wakelightcompanion
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.broadcast_receivers.WakeLightStopper
-import com.richardswesterhof.wakelightcompanion.devices.tuya.TuyaApiHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.richardswesterhof.wakelightcompanion.devices.tuya.TuyaConfig
+import com.richardswesterhof.wakelightcompanion.devices.tuya.TuyaImpl
 import java.util.Date
 
 
@@ -46,18 +43,8 @@ class MainFragment : Fragment() {
 
         val magicButton = view.findViewById(R.id.test_button) as Button
         magicButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
-                val tuyaApiHandler = TuyaApiHandler()
-                Log.d(
-                    "testing",
-                    tuyaApiHandler.execute(
-                        tuyaApiHandler.getTokenPath,
-                        "GET",
-                        "",
-                        HashMap()
-                    ).body?.string() ?: "<no response body>"
-                )
-            }
+            val tuyaImpl = TuyaImpl()
+            tuyaImpl.startWakeLight(requireContext(), TuyaConfig())
         }
     }
 
@@ -69,7 +56,8 @@ class MainFragment : Fragment() {
             action = "com.richardswesterhof.wakelightcompanion.STOP_WAKELIGHT_ALARM"
         }
         context?.sendBroadcast(stopWakeLightIntent)
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val sharedPrefs =
+            PreferenceManager.getDefaultSharedPreferences(context) // TODO: should this be internal prefs?
         with(sharedPrefs.edit()) {
             putLong("nextAlarmMillis", 0)
             apply()

@@ -3,6 +3,9 @@ package com.richardswesterhof.wakelightcompanion.devices.tuya
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.richardswesterhof.wakelightcompanion.devices.IWakeLightImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 private val deviceCache = "device_cache.csv"
 private val HEADER_DEVICE_ID = "id"
@@ -30,7 +33,109 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
     }
 
     override fun startWakeLight(context: Context, config: TuyaConfig) {
-//        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val api = TuyaApi(context)
+            val commands = """{
+  "commands": [
+    {
+      "code": "switch_led",
+      "value": true
+    },
+    {
+      "code": "work_mode",
+      "value": "scene"
+    },
+    {
+      "code": "scene_data",
+      "value": {
+        "scene_num": 1,
+        "scene_units": [
+          {
+            "bright": 0,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 125,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 250,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 375,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 500,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 625,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 750,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          },
+          {
+            "bright": 875,
+            "temperature": 0,
+            "unit_change_mode": "gradient",
+            "unit_gradient_duration": 0,
+            "unit_switch_duration": 0,
+            "h": 0,
+            "s": 0,
+            "v": 0
+          }
+        ]
+      }
+    }
+  ]
+}"""
+            api.commandDevice("bf299ec91da11b5b13i8gw", commands)
 //            val id = config.getYeelightId() ?: ""
 //            // first try to find out if the location of the light is stored in cache
 //            val device: YeelightDeviceMeta? = getDeviceById(context, id)
@@ -45,7 +150,7 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
 //                Log.w("device not found", "Could not find device with id '$id'")
 //                sendNotifIdNotActive(context, id)
 //            }
-//        }
+        }
     }
 
     override fun stopWakeLight(config: TuyaConfig) {

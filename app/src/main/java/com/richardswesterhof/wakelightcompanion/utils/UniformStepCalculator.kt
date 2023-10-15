@@ -54,7 +54,7 @@ class UniformStepCalculator(
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            println(LinearFunction.givenPoints(Pair(0.0, 0.0), Pair(2.0, 1.0)))
+            println(LinearFunction.givenPoints(0.0 to 0.0, 2.0 to 1.0))
         }
     }
 }
