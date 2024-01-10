@@ -1,7 +1,10 @@
 package com.richardswesterhof.wakelightcompanion.devices.tuya
 
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
+import androidx.preference.PreferenceManager
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -31,12 +34,9 @@ import javax.crypto.spec.SecretKeySpec
  * gongtai.yin
  * 2021/08/18
  */
-class TuyaHttpHandler() {
-    // Access ID
-    private val accessId = "TODO" // TODO: retrieve from *somewhere*
-
-    // Access Secret
-    private val accessKey = "TODO" // TODO: retrieve from *somewhere*
+class TuyaHttpHandler(val context: Context) {
+    private val sharedPrefs: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 
     private val CONTENT_TYPE: MediaType? = "application/json".toMediaTypeOrNull()
     private val EMPTY_HASH =
@@ -48,8 +48,10 @@ class TuyaHttpHandler() {
     init {
         // Designated area domain name
         Constants.CONTAINER[Constants.ENDPOINT] = Constants.ENDPOINT_URL
-        Constants.CONTAINER[Constants.ACCESS_ID] = accessId
-        Constants.CONTAINER[Constants.ACCESS_KEY] = accessKey
+        Constants.CONTAINER[Constants.ACCESS_ID] =
+            sharedPrefs.getString("pref_tuya_access_id", "")!!
+        Constants.CONTAINER[Constants.ACCESS_KEY] =
+            sharedPrefs.getString("pref_tuya_access_key", "")!!
 
     }
 

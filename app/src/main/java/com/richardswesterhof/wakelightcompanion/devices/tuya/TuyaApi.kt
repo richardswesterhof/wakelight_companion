@@ -16,7 +16,7 @@ class TuyaApi(context: Context) {
             context.getString(R.string.preference_file_store_internal_vars),
             Context.MODE_PRIVATE
         )
-        httpHandler = TuyaHttpHandler()
+        httpHandler = TuyaHttpHandler(context)
     }
 
     /**
