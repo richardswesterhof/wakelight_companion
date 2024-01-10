@@ -1,17 +1,12 @@
 package com.richardswesterhof.wakelightcompanion.broadcast_receivers
 
-import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import com.richardswesterhof.wakelightcompanion.R
 import com.richardswesterhof.wakelightcompanion.devices.yeelight.YeelightImpl
-import com.richardswesterhof.wakelightcompanion.utils.IdManager
 
 private val starterListeningFors: List<String> =
     listOf("com.richardswesterhof.wakelightcompanion.START_WAKELIGHT_ALARM")
@@ -35,6 +30,7 @@ class WakeLightStarter : ExtendedBroadcastReceiver(starterListeningFors) {
         if (am.nextAlarmClock.triggerTime == (intent.extras?.get("userTimeMillis") as Long)) {
             // only if it does, start wakelight
             Log.d(this::class.simpleName, "Received request to start wakelight")
+            // TODO: store current state to restore later?
 //            sendDisableNotif(context)
             startWakeLight(context)
         }
