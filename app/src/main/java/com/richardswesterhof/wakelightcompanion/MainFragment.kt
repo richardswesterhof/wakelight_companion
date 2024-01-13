@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
         val magicButton = view.findViewById(R.id.test_button) as Button
         magicButton.setOnClickListener {
             val tuyaImpl = TuyaImpl()
-            tuyaImpl.startWakeLight(requireContext(), TuyaConfig())
+            tuyaImpl.startWakeLight(requireContext(), TuyaConfig()) // TODO: init config here
         }
     }
 

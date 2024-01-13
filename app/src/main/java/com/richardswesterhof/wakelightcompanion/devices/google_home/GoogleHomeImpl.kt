@@ -13,7 +13,7 @@ class GoogleHomeImpl : ViewModel(), IWakeLightImpl<GoogleHomeImpl> {
         TODO("Not yet implemented")
     }
 
-    override fun stopWakeLight(config: GoogleHomeImpl) {
+    override fun stopWakeLight(context: Context, config: GoogleHomeImpl) {
         TODO("Not yet implemented")
     }
 

@@ -36,7 +36,7 @@ import java.io.FileWriter
 import java.io.Reader
 import java.util.Arrays
 
-private val deviceCache = "device_cache.csv"
+private val deviceCache = "yeelight_device_cache.csv"
 private val HEADER_DEVICE_ID = "id"
 private val HEADER_DEVICE_IP = "ip"
 private val HEADER_DEVICE_PORT = "port"
@@ -85,7 +85,7 @@ class YeelightImpl : ViewModel(), IWakeLightImpl<YeelightConfig> {
         }
     }
 
-    override fun stopWakeLight(config: YeelightConfig) {
+    override fun stopWakeLight(context: Context, config: YeelightConfig) {
         // create a new coroutine to move the execution off the UI thread
         viewModelScope.launch(Dispatchers.IO) {
             val device =

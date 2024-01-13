@@ -5,12 +5,12 @@ private const val COLOR_TEMP_MAX = 1000
 
 //class TuyaConfig(sharedPrefs: SharedPreferences) : Config(sharedPrefs) {
 class TuyaConfig(
-    val id: String,
-    val durationInMinutes: Double,
-    val startingBrightness: Double,
-    val startingColorTemp: Double,
-    val endingBrightness: Double,
-    val endingColorTemp: Double
+    val id: String = "__DOES_NOT_EXIST__",
+    val durationInMinutes: Double = 30.0,
+    val startingBrightness: Double = 0.0,
+    val startingColorTemp: Double = 0.0,
+    val endingBrightness: Double = 100.0,
+    val endingColorTemp: Double = 1000.0
 ) {
 //    fun getTuyaId(): String? {
 //        return getString("pref_wakelight_id", null)

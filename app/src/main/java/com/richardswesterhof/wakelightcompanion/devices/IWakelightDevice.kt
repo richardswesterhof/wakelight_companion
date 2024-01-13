@@ -6,5 +6,5 @@ interface IWakeLightImpl<DeviceConfig> {
 
     fun startWakeLight(context: Context, config: DeviceConfig)
 
-    fun stopWakeLight(config: DeviceConfig)
+    fun stopWakeLight(context: Context, config: DeviceConfig)
 }

@@ -1,7 +1,10 @@
 package com.richardswesterhof.wakelightcompanion.devices.tuya
 
 import android.content.Context
+import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.richardswesterhof.wakelightcompanion.devices.IWakeLightImpl
 import com.richardswesterhof.wakelightcompanion.utils.UniformStepCalculator
 import kotlinx.coroutines.Dispatchers
@@ -10,11 +13,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.ceil
-
-private val deviceCache = "device_cache.csv"
-private val HEADER_DEVICE_ID = "id"
-private val HEADER_DEVICE_IP = "ip"
-private val HEADER_DEVICE_PORT = "port"
 
 /**
  * the methods in this file will actually send the request to the Tuya device
@@ -29,23 +27,20 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
     val MAX_GRADIENT_DURATION = 100;
     val MAX_SWITCH_DURATION = 100;
 
-    fun sendStartCommand(context: Context, config: TuyaConfig) {
-
+    fun sendStartCommand(context: Context, config: TuyaConfig, jsonRequest: JSONObject) {
         // create a new coroutine to move the execution off the UI thread
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val device =
-//                config.getPort()?.let { YeelightDevice(config.getIp(), it) } ?: YeelightDevice(
-//                    config.getIp()
-//                )
-//            initDevice(device, config)
-//            device.startFlow(flow)
-//            Log.d("startWakeLight", "done")
-//        }
+        viewModelScope.launch(Dispatchers.IO) {
+            GlobalScope.launch(Dispatchers.IO) {
+                val api = TuyaApi(context)
+                api.commandDevice(config.id, jsonRequest.toString())
+            }
+            Log.d("startWakeLight", "done")
+        }
     }
 
     override fun startWakeLight(context: Context, config: TuyaConfig) {
         val requests = ceil(config.durationInMinutes * SECS_PER_MIN / STEPS_PER_REQ / SECS_PER_STEP)
-        val stepDuration = config.durationInMinutes * SECS_PER_MIN / requests * STEPS_PER_REQ
+//        val stepDuration = config.durationInMinutes * SECS_PER_MIN / requests * STEPS_PER_REQ
         val stepCalculator = UniformStepCalculator(
             requests * STEPS_PER_REQ,
             config.startingBrightness,
@@ -77,117 +72,115 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
             val jsonRequest = JSONObject()
             jsonRequest.put("commands", jsonCommands)
 
-            // TODO: here the request should be sent, and the execution paused in some way, maybe by
-            // sleeping, maybe by creating a new scheduled intent for each outer iteration,
-            // possibly all at once, or one by one in a chained fashion
+            sendStartCommand(context, config, jsonRequest)
+            // For now the we just sleep, but eventually we could use scheduled intents
+            if (request < requests - 1) SystemClock.sleep((stepCalculator.calcDuration(STEPS_PER_REQ) * 1000).toLong())
         }
 
-
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val api = TuyaApi(context)
-            val commands = """{
-  "commands": [
-    {
-      "code": "switch_led",
-      "value": true
-    },
-    {
-      "code": "work_mode",
-      "value": "scene"
-    },
-    {
-      "code": "scene_data",
-      "value": {
-        "scene_num": 1,
-        "scene_units": [
-          {
-            "bright": 0,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 125,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 250,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 375,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 500,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 625,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 750,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          },
-          {
-            "bright": 875,
-            "temperature": 0,
-            "unit_change_mode": "gradient",
-            "unit_gradient_duration": 0,
-            "unit_switch_duration": 0,
-            "h": 0,
-            "s": 0,
-            "v": 0
-          }
-        ]
-      }
-    }
-  ]
-}"""
+//        GlobalScope.launch(Dispatchers.IO) {
+//            val api = TuyaApi(context)
+//            val commands = """{
+//  "commands": [
+//    {
+//      "code": "switch_led",
+//      "value": true
+//    },
+//    {
+//      "code": "work_mode",
+//      "value": "scene"
+//    },
+//    {
+//      "code": "scene_data",
+//      "value": {
+//        "scene_num": 1,
+//        "scene_units": [
+//          {
+//            "bright": 0,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 125,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 250,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 375,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 500,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 625,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 750,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          },
+//          {
+//            "bright": 875,
+//            "temperature": 0,
+//            "unit_change_mode": "gradient",
+//            "unit_gradient_duration": 0,
+//            "unit_switch_duration": 0,
+//            "h": 0,
+//            "s": 0,
+//            "v": 0
+//          }
+//        ]
+//      }
+//    }
+//  ]
+//}"""
 //            api.commandDevice("bf299ec91da11b5b13i8gw", commands)
-            api.commandDevice(config.id, commands)
+//            api.commandDevice(config.id, commands)
 //            val id = config.getYeelightId() ?: ""
 //            // first try to find out if the location of the light is stored in cache
 //            val device: YeelightDeviceMeta? = getDeviceById(context, id)
@@ -202,23 +195,24 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
 //                Log.w("device not found", "Could not find device with id '$id'")
 //                sendNotifIdNotActive(context, id)
 //            }
-        }
-    }
-
-    override fun stopWakeLight(config: TuyaConfig) {
-        // create a new coroutine to move the execution off the UI thread
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val device =
-//                config.getPort()?.let { YeelightDevice(config.getIp(), it) } ?: YeelightDevice(
-//                    config.getIp()
-//                )
-//            device.stopFlow()
-//            Log.d("stopWakeLight", "sent request to wakelight")
 //        }
     }
 
-    private fun getDeviceById(context: Context, id: String) {
+    override fun stopWakeLight(context: Context, config: TuyaConfig) {
+        val commands = JSONArray()
+        commands.put(JSONObject(mapOf("code" to "switch_led", "value" to true)))
+        commands.put(JSONObject(mapOf("code" to "work_mode", "value" to "scene")))
+        val sceneData = JSONObject(mapOf("scene_num" to 1, "scene_units" to JSONArray()))
+        commands.put(JSONObject(mapOf("code" to "scene_data", "value" to sceneData)))
 
+        val jsonRequest = JSONObject()
+        jsonRequest.put("commands", commands)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val api = TuyaApi(context)
+            api.commandDevice(config.id, jsonRequest.toString())
+            Log.d("stopWakeLight", "sent request to wakelight")
+        }
     }
 
     private fun createSceneUnit(step: Int, stepCalculator: UniformStepCalculator): JSONObject {
@@ -227,8 +221,10 @@ class TuyaImpl : ViewModel(), IWakeLightImpl<TuyaConfig> {
         retVal.put("temperature", stepCalculator.calcTemperature(step))
         retVal.put("unit_change_mode", "gradient")
         // durations, not sure if both are used in gradient mode or only the gradient duration
-        retVal.put("unit_gradient_duration", MAX_GRADIENT_DURATION)
-        retVal.put("unit_switch_duration", MAX_SWITCH_DURATION)
+//        retVal.put("unit_gradient_duration", stepCalculator.calcDuration(step))
+        retVal.put("unit_gradient_duration", 1) // always evaluate at step 1 for relative duration
+//        retVal.put("unit_switch_duration", stepCalculator.calcDuration(step))
+        retVal.put("unit_switch_duration", 1) // always evaluate at step 1 for relative duration
         // We don't use HSV, but they are still mandatory in the request structure
         retVal.put("h", 0)
         retVal.put("s", 0)
